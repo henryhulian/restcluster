@@ -17,11 +17,17 @@ public class HelloWorld {
 		map.put("hello","111111111");
 		map.put("hello","111111111");
 	}
-
+	
 	@Path("hello")
 	@GET
+	public String getHello(){
+		return "hello";
+	}
+
+	@Path("helloJson")
+	@GET
 	@Produces("application/xml")
-	public Map<String, String> getHello(){
+	public Map<String, String> getHelloJson(){
 		return map;
 	}
 	
