@@ -13,7 +13,7 @@
 				<artifactId>undertow-core</artifactId>
 				<version>1.0.1.Final</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>io.undertow</groupId>
 				<artifactId>undertow-servlet</artifactId>
@@ -21,8 +21,20 @@
 			</dependency>
 
 			<dependency>
+				<groupId>net.sf.scannotation</groupId>
+				<artifactId>scannotation</artifactId>
+				<version>1.0.2</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-undertow</artifactId>
+				<version>3.0.10.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-jaxb-provider</artifactId>
 				<version>3.0.10.Final</version>
 			</dependency>
 
