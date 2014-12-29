@@ -14,9 +14,13 @@
 			<artifactId>undertow-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-servlet</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-undertow</artifactId>
-		</dependency> 
+		</dependency>
 	</dependencies>
 
 </project>
