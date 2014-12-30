@@ -3,17 +3,21 @@ package com.superest.resources.hello;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+
 
 @Path("helloWorld")
 public class HelloWorld {
+	
+	@Context
+	private HttpServletRequest request;
 	
 	static Map<String, String>map = new HashMap<String, String>();
 	static{
@@ -23,16 +27,13 @@ public class HelloWorld {
 		map.put("hello4","111111111");
 	}
 	
-	@Path("hello")
-	@GET
-	public String getHello(){
-		return "hello";
-	}
 
+	@PermitAll
 	@Path("helloJson")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, String> getHelloJson(){
+		System.exit(0);
 		return map;
 	}
 	
@@ -44,12 +45,16 @@ public class HelloWorld {
 		user.username="sfsdf";
 		return user;
 	}
-	
-	@XmlRootElement
-	@XmlAccessorType(XmlAccessType.NONE)
-	class UserBean{
-		@XmlElement
-		private String username;
+
+	@Path("session")
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	@RolesAllowed("test")
+	public UserBean getSession(){
+		request.getSession().setAttribute("dfdf", "2222");
+		System.out.println();
+		UserBean user = new UserBean();
+		user.username="sfsdf";
+		return user;
 	}
-	
 }
