@@ -1,4 +1,4 @@
-package com.superest.resources.hello;
+package com.superest.test.resources.hello.resources;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
 
 
 @Path("helloWorld")

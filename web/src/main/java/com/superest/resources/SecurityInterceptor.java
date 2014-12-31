@@ -1,4 +1,4 @@
-package com.superest.security;
+package com.superest.resources;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

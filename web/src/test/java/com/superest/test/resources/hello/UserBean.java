@@ -1,4 +1,4 @@
-package com.superest.resources.hello;
+package com.superest.test.resources.hello;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

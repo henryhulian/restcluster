@@ -1,5 +1,7 @@
 package com.superest.server;
 
+import javax.ws.rs.core.Application;
+
 import io.undertow.Undertow;
 
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -8,11 +10,13 @@ import org.xnio.Options;
 import com.superest.resources.JaxrsApplication;
 
 public class SuperRestServer extends Thread{
+	
+	private Class<? extends JaxrsApplication> applicationClass;
 
 	@Override
 	public void run() {
 		final UndertowJaxrsServer undertowJaxrsServer = new UndertowJaxrsServer();
-		undertowJaxrsServer.deploy(JaxrsApplication.class);
+		undertowJaxrsServer.deploy(applicationClass);
 		undertowJaxrsServer.start(Undertow.builder().setIoThreads(20)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 500)
 				.addHttpListener(8081, "0.0.0.0"));
@@ -24,6 +28,14 @@ public class SuperRestServer extends Thread{
 				System.out.println("Inside Add Shutdown Hook");
 			}
 		});
+	}
+
+	public Class<?> getApplicationClass() {
+		return applicationClass;
+	}
+
+	public void setApplicationClass(Class<JaxrsApplication> applicationClass) {
+		this.applicationClass = applicationClass;
 	}
 	
 }
