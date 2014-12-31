@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-class UserBean{
+public class UserBean{
 	@XmlElement
 	public String username;
 }

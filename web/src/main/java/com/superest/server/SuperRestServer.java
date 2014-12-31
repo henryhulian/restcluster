@@ -1,6 +1,5 @@
 package com.superest.server;
 
-import javax.ws.rs.core.Application;
 
 import io.undertow.Undertow;
 
@@ -30,11 +29,11 @@ public class SuperRestServer extends Thread{
 		});
 	}
 
-	public Class<?> getApplicationClass() {
+	public Class<? extends JaxrsApplication> getApplicationClass() {
 		return applicationClass;
 	}
 
-	public void setApplicationClass(Class<JaxrsApplication> applicationClass) {
+	public void setApplicationClass(Class<? extends JaxrsApplication> applicationClass) {
 		this.applicationClass = applicationClass;
 	}
 	

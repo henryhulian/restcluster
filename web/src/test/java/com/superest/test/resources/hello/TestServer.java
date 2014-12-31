@@ -1,7 +1,5 @@
 package com.superest.test.resources.hello;
 
-import javax.ws.rs.core.Application;
-
 import com.superest.server.SuperRestServer;
 import com.superest.test.resources.hello.resources.TestApplication;
 
