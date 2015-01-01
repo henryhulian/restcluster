@@ -11,12 +11,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
+import org.infinispan.Cache;
 import com.superest.test.resources.hello.*;
 
 
 
 @Path("helloWorld")
 public class HelloWorld {
+	
 	
 	@Context
 	private HttpServletRequest request;
@@ -47,7 +50,29 @@ public class HelloWorld {
 		user.username="sfsdf";
 		return user;
 	}
+	
+	@PermitAll
+	@Path("putCache")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String putCache(){
+		
+		Cache<String, String> cache = TestServer.emCacheManager.getCache();
+		cache.put("cachekey", String.valueOf(System.currentTimeMillis()));
+		return (String)cache.get("cachekey");
+	}
+	
+	@PermitAll
+	@Path("getCache")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getCache(){
+		
+		Cache<String, String> cache = TestServer.emCacheManager.getCache();
+		return (String)cache.get("cachekey");
+	}
 
+	@PermitAll
 	@Path("session")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
