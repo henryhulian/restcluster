@@ -57,9 +57,15 @@
 			</dependency>
 
 			<dependency>
-				<groupId>net.sf.scannotation</groupId>
-				<artifactId>scannotation</artifactId>
-				<version>1.0.2</version>
+				<groupId>org.reflections</groupId>
+				<artifactId>reflections-maven</artifactId>
+				<version>0.9.9-RC2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sleepycat</groupId>
+				<artifactId>je</artifactId>
+				<version>6.2.31</version>
 			</dependency>
 
 		</dependencies>
