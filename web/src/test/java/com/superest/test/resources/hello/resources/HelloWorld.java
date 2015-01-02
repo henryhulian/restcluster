@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import org.infinispan.Cache;
 
 import com.superest.cache.CacheFatory;
+import com.superest.session.Session;
+import com.superest.session.SessionFatory;
 import com.superest.test.resources.hello.data.UserBean;
 
 
@@ -97,11 +99,9 @@ public class HelloWorld {
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	@RolesAllowed("test")
-	public UserBean getSession(){
-		request.getSession().setAttribute("dfdf", "2222");
-		System.out.println();
-		UserBean user = new UserBean();
-		user.username="sfsdf";
-		return user;
+	public Session getSession(){
+		Session session = SessionFatory.createSession();
+		session.put("key", "value");
+		return session;
 	}
 }

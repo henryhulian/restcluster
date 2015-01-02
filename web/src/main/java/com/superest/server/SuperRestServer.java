@@ -7,6 +7,7 @@ import org.xnio.Options;
 import com.superest.cache.CacheFatory;
 import com.superest.db.DataBaseFactory;
 import com.superest.resources.JaxrsApplication;
+import com.superest.session.SessionFatory;
 
 public class SuperRestServer extends Thread {
 
@@ -23,6 +24,8 @@ public class SuperRestServer extends Thread {
 	public void run() {
 
 		CacheFatory.init(configDir);
+		
+		SessionFatory.init();
 
 		DataBaseFactory.init(dbDir);
 
@@ -73,6 +76,14 @@ public class SuperRestServer extends Thread {
 
 	public void setDbDir(String dbDir) {
 		this.dbDir = dbDir;
+	}
+
+	public String getConfigDir() {
+		return configDir;
+	}
+
+	public void setConfigDir(String configDir) {
+		this.configDir = configDir;
 	}
 
 }

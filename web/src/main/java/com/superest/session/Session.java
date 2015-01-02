@@ -2,9 +2,13 @@ package com.superest.session;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
-public class UserSession implements Serializable{
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Session implements Serializable{
 	
 	/**
 	 * 
@@ -21,7 +25,7 @@ public class UserSession implements Serializable{
 	
 	private Timestamp lassAccessTime;
 	
-	private Map<String,String> properties;
+	private Map<String,String> properties = new HashMap<String, String>();
 	
 	public void put( String key, String value){
 		properties.put(key, value);
