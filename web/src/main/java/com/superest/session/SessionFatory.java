@@ -27,13 +27,13 @@ public class SessionFatory {
 		sessionCache.put(session.getSessionId(), session);
 		return session;
 	}
-	
-	public static Session pudateSession(Session session){
-		sessionCache.put(session.getSessionId(), session);
-		return session;
+
+	public static Cache<String, Session> getSessionCache() {
+		return sessionCache;
+	}
+
+	public static void setSessionCache(Cache<String, Session> sessionCache) {
+		SessionFatory.sessionCache = sessionCache;
 	}
 	
-	public static Session getSession( String sessionId ){
-		return sessionCache.get(sessionId);
-	}
 }
