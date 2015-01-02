@@ -1,15 +1,13 @@
 package com.superest.server;
 
-
 import io.undertow.Undertow;
 
-import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.xnio.Options;
 
 import com.superest.resources.JaxrsApplication;
 
-public class SuperRestServer extends Thread{
-	
+public class SuperRestServer extends Thread {
+
 	private Class<? extends JaxrsApplication> applicationClass;
 
 	@Override
@@ -33,8 +31,9 @@ public class SuperRestServer extends Thread{
 		return applicationClass;
 	}
 
-	public void setApplicationClass(Class<? extends JaxrsApplication> applicationClass) {
+	public void setApplicationClass(
+			Class<? extends JaxrsApplication> applicationClass) {
 		this.applicationClass = applicationClass;
 	}
-	
+
 }

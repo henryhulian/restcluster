@@ -38,13 +38,31 @@ public class HelloWorld {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, String> getHelloJson(){
-		System.exit(0);
 		return map;
 	}
 	
+	@PermitAll
+	@Path("helloXml")
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public Map<String, String> getHelloXML(){
+		return map;
+	}
+	
+	@PermitAll
 	@Path("userXml")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
+	public UserBean getUserXml(){
+		UserBean user = new UserBean();
+		user.username="sfsdf";
+		return user;
+	}
+	
+	@PermitAll
+	@Path("userJson")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public UserBean getUserJson(){
 		UserBean user = new UserBean();
 		user.username="sfsdf";
