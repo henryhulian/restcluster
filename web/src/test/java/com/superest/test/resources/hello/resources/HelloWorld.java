@@ -109,7 +109,7 @@ public class HelloWorld {
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Session putSession(@QueryParam("sessionId") String sessionId){
-		SessionFatory.getSession(sessionId).put("key", "value");
+		SessionFatory.getSession(sessionId).put("key", String.valueOf(System.currentTimeMillis()));
 		return SessionFatory.getSession(sessionId);
 	}
 	
