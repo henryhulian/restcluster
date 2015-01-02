@@ -1,10 +1,7 @@
 package com.superest.authtication;
 
-import javax.servlet.http.HttpServletResponse;
-
 import com.superest.session.Session;
 import com.superest.session.SessionFatory;
-import com.superest.util.CookieUtil;
 
 public class AuthticationService {
 
@@ -17,16 +14,13 @@ public class AuthticationService {
 		this.authticatior=authticatior;
 	}
 	
-	public boolean authtication( String userName , String password , HttpServletResponse response){
+	public Session authtication( String userName , String password ){
 		
 		if( !authticatior.authtication(userName, password)){
-			return false;
+			return null;
 		}
 		
-		Session session = SessionFatory.createSession();
-		CookieUtil.setCookie(response, "TOKEN", session.getSessionId(), "/", true,10000);
-		
-		return true;
+		return SessionFatory.createSession();
 	}
 
 	public Authticatior getAuthticatior() {

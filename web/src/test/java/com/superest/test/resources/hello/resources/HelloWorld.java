@@ -20,6 +20,8 @@ import com.superest.service.ServiceFatory;
 import com.superest.session.Session;
 import com.superest.session.SessionFatory;
 import com.superest.test.resources.hello.data.UserBean;
+import com.superest.util.CookieUtil;
+import com.superest.util.TokenUtil;
 
 
 
@@ -134,6 +136,11 @@ public class HelloWorld{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean login( ){
-		return ServiceFatory.getAuthticationService().authtication(null, null, response);
+		Session session = ServiceFatory.getAuthticationService().authtication(null, null);
+		if( session == null ){
+			return false;
+		}
+		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionId(), request.getContextPath(), true, 0);
+		return true;
 	}
 }
