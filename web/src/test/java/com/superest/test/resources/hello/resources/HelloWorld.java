@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import org.infinispan.Cache;
 
 import com.superest.cache.CacheFatory;
-import com.superest.test.resources.hello.*;
+import com.superest.test.resources.hello.data.UserBean;
 
 
 

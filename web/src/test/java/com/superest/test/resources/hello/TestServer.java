@@ -15,6 +15,7 @@ public class TestServer {
 		superRestServer.setDbDir(dir+"/db");
 		superRestServer.setApplicationClass(TestApplication.class);
 		superRestServer.start();
+		
 		Thread.currentThread().join();
 		
 	}
