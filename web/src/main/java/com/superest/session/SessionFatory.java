@@ -28,6 +28,11 @@ public class SessionFatory {
 		return session;
 	}
 	
+	public static Session pudateSession(Session session){
+		sessionCache.put(session.getSessionId(), session);
+		return session;
+	}
+	
 	public static Session getSession( String sessionId ){
 		return sessionCache.get(sessionId);
 	}
