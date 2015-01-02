@@ -5,8 +5,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import com.superest.db.DataBaseFactory;
-
 @Path("admin")
 public class ServerAdminRestService {
 
@@ -15,7 +13,6 @@ public class ServerAdminRestService {
 	@GET
 	@POST
 	public String  shutdownServer(){
-		DataBaseFactory.clear();
 		SuperRestServerContext.getUndertowJaxrsServer().stop();
 		return "OK";
 	}
