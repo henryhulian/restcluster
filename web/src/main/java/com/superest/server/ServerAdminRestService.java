@@ -16,7 +16,7 @@ public class ServerAdminRestService {
 	@POST
 	public String  shutdownServer(){
 		DataBaseFactory.clear();
-		SuperRestServerContext.getSuperRestServer().getUndertowJaxrsServer().stop();
+		SuperRestServerContext.getUndertowJaxrsServer().stop();
 		return "OK";
 	}
 	
@@ -25,7 +25,7 @@ public class ServerAdminRestService {
 	@GET
 	@POST
 	public String  startServer(){
-		SuperRestServerContext.getSuperRestServer().getUndertowJaxrsServer().start();
+		SuperRestServerContext.getUndertowJaxrsServer().start();
 		return "OK";
 	}
 }

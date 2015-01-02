@@ -2,14 +2,15 @@ package com.superest.server;
 
 public class SuperRestServerContext {
 
-	private static SuperRestServer superRestServer;
+	private static UndertowJaxrsServer undertowJaxrsServer;
 
-	public static SuperRestServer getSuperRestServer() {
-		return superRestServer;
+	public static UndertowJaxrsServer getUndertowJaxrsServer() {
+		return undertowJaxrsServer;
 	}
 
-	public static void setSuperRestServer(SuperRestServer superRestServer) {
-		SuperRestServerContext.superRestServer = superRestServer;
+	public static void setUndertowJaxrsServer(
+			UndertowJaxrsServer undertowJaxrsServer) {
+		SuperRestServerContext.undertowJaxrsServer = undertowJaxrsServer;
 	}
-	
+
 }

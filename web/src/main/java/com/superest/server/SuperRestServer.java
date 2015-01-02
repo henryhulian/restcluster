@@ -14,7 +14,7 @@ public class SuperRestServer extends Thread {
 	private  String dbDir=null;
 	
 	public SuperRestServer() {
-		SuperRestServerContext.setSuperRestServer(this);
+		
 	}
 
 	@Override
@@ -23,6 +23,7 @@ public class SuperRestServer extends Thread {
 		DataBaseFactory.init(dbDir);
 		
 		undertowJaxrsServer = new UndertowJaxrsServer();
+		SuperRestServerContext.setUndertowJaxrsServer(undertowJaxrsServer);
 		undertowJaxrsServer.deploy(applicationClass);
 		undertowJaxrsServer.start(Undertow.builder().setIoThreads(20)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 500)
