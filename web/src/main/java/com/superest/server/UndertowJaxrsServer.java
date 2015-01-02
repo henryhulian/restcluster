@@ -1,5 +1,6 @@
 package com.superest.server;
 
+
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.servlet.api.DeploymentInfo;
@@ -229,7 +230,7 @@ public class UndertowJaxrsServer
       manager.deploy();
       try
       {
-         root.addExactPath(builder.getContextPath(), manager.start());
+         root.addPrefixPath(builder.getContextPath(), manager.start());
       }
       catch (ServletException e)
       {
@@ -248,7 +249,7 @@ public class UndertowJaxrsServer
    public UndertowJaxrsServer start()
    {
       server = Undertow.builder()
-    		  .addHttpListener(TestPortProvider.getPort(), "localhost")
+              .addHttpListener(TestPortProvider.getPort(), "localhost")
               .setHandler(root)
               .build();
       server.start();
