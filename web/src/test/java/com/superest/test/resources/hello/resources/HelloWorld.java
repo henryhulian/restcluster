@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import org.infinispan.Cache;
 
 import com.superest.cache.CacheFatory;
+import com.superest.service.ServiceFatory;
 import com.superest.session.Session;
 import com.superest.session.SessionFatory;
 import com.superest.test.resources.hello.data.UserBean;
@@ -22,11 +24,15 @@ import com.superest.test.resources.hello.data.UserBean;
 
 
 @Path("helloWorld")
-public class HelloWorld {
+public class HelloWorld{
 	
 	
 	@Context
 	private HttpServletRequest request;
+	
+	
+	@Context
+	private HttpServletResponse response;
 	
 	static Map<String, String>map = new HashMap<String, String>();
 	static{
@@ -109,10 +115,10 @@ public class HelloWorld {
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Session putSession(@QueryParam("sessionId") String sessionId){
-		Session session = SessionFatory.getSession(sessionId);
+		Session session = ServiceFatory.getSessionService().getSession(sessionId);
 		session.put("key", String.valueOf(System.currentTimeMillis()));
-		SessionFatory.pudateSession(session);
-		return SessionFatory.getSession(sessionId);
+		ServiceFatory.getSessionService().updateSession(session);
+		return ServiceFatory.getSessionService().getSession(sessionId);
 	}
 	
 	@PermitAll
@@ -120,6 +126,14 @@ public class HelloWorld {
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Session getSession( @QueryParam("sessionId") String sessionId){
-		return SessionFatory.getSession(sessionId);
+		return ServiceFatory.getSessionService().getSession(sessionId);
+	}
+	
+	@PermitAll
+	@Path("login")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean login( ){
+		return ServiceFatory.getAuthticationService().authtication(null, null, response);
 	}
 }

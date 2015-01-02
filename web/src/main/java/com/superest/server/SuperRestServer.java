@@ -4,9 +4,11 @@ import io.undertow.Undertow;
 
 import org.xnio.Options;
 
+import com.superest.authtication.Authticatior;
 import com.superest.cache.CacheFatory;
 import com.superest.db.DataBaseFactory;
 import com.superest.resources.JaxrsApplication;
+import com.superest.service.ServiceFatory;
 import com.superest.session.SessionFatory;
 
 public class SuperRestServer extends Thread {
@@ -17,6 +19,7 @@ public class SuperRestServer extends Thread {
 	private String configDir = null;
 	private int webPort=8081;
 	private int adminPort=8082;
+	private Authticatior authticatior;
 
 	public SuperRestServer() {
 
@@ -31,6 +34,8 @@ public class SuperRestServer extends Thread {
 
 		DataBaseFactory.init(dbDir);
 
+		ServiceFatory.init(authticatior);
+		
 		undertowJaxrsServer = new UndertowJaxrsServer();
 		SuperRestServerContext.setUndertowJaxrsServer(undertowJaxrsServer);
 		undertowJaxrsServer.deploy(applicationClass);
@@ -102,6 +107,14 @@ public class SuperRestServer extends Thread {
 
 	public void setConfigDir(String configDir) {
 		this.configDir = configDir;
+	}
+
+	public Authticatior getAuthticatior() {
+		return authticatior;
+	}
+
+	public void setAuthticatior(Authticatior authticatior) {
+		this.authticatior = authticatior;
 	}
 
 }
