@@ -3,7 +3,6 @@ package com.superest.test.resources.hello;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 
-import com.superest.db.DataBaseFactory;
 import com.superest.server.SuperRestServer;
 import com.superest.test.resources.hello.resources.TestApplication;
 
@@ -18,12 +17,9 @@ public class TestServer {
 		emCacheManager = new DefaultCacheManager();
 		
 		final String dir = System.getProperty("user.dir");
-		System.out.println(dir);
-		DataBaseFactory.init(dir+"/db");
-	
-		DataBaseFactory.openDatabase("user");
 		
 		SuperRestServer superRestServer = new SuperRestServer();
+		superRestServer.setDbDir(dir+"/db");
 		superRestServer.setApplicationClass(TestApplication.class);
 		superRestServer.start();
 		Thread.currentThread().join();

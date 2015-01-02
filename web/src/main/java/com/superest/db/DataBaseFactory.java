@@ -10,7 +10,14 @@ import com.sleepycat.je.EnvironmentConfig;
 
 public class DataBaseFactory {
 	
+	/**
+	 * database environment
+	 * */
 	private static Environment environment=null;
+	
+	/**
+	 * database map , this is used to close all opened database when server shutdown
+	 * */
 	private final static Map<String,Database> databases = new HashMap<String, Database>();
 
 	private DataBaseFactory() {
