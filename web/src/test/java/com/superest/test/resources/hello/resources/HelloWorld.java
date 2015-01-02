@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -95,13 +95,29 @@ public class HelloWorld {
 	}
 
 	@PermitAll
-	@Path("session")
+	@Path("postsession")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	@RolesAllowed("test")
 	public Session getSession(){
 		Session session = SessionFatory.createSession();
 		session.put("key", "value");
 		return session;
+	}
+	
+	@PermitAll
+	@Path("putsession")
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public Session putSession(@QueryParam("sessionId") String sessionId){
+		SessionFatory.getSession(sessionId).put("key", "value");
+		return SessionFatory.getSession(sessionId);
+	}
+	
+	@PermitAll
+	@Path("getsession")
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public Session getSession( @QueryParam("sessionId") String sessionId){
+		return SessionFatory.getSession(sessionId);
 	}
 }

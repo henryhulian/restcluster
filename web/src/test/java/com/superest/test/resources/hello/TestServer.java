@@ -16,7 +16,7 @@ public class TestServer {
 		SuperRestServer superRestServer = new SuperRestServer();
 		
 		superRestServer.setDbDir(dir+File.separatorChar+"db");
-		superRestServer.setConfigDir(".");
+		superRestServer.setConfigDir(dir+File.separatorChar+"config");
 		superRestServer.setApplicationClass(TestApplication.class);
 
 		superRestServer.start();

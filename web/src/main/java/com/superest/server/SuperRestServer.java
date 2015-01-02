@@ -15,6 +15,8 @@ public class SuperRestServer extends Thread {
 	private UndertowJaxrsServer undertowJaxrsServer = null;
 	private String dbDir = null;
 	private String configDir = null;
+	private int webPort=8081;
+	private int adminPort=8082;
 
 	public SuperRestServer() {
 
@@ -34,13 +36,13 @@ public class SuperRestServer extends Thread {
 		undertowJaxrsServer.deploy(applicationClass);
 		undertowJaxrsServer.start(Undertow.builder().setIoThreads(20)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 500)
-				.addHttpListener(8081, "0.0.0.0"));
+				.addHttpListener(webPort, "0.0.0.0"));
 
 		final UndertowJaxrsServer undertowJaxrsAdminServer = new UndertowJaxrsServer();
 		undertowJaxrsAdminServer.deploy(AdminApplication.class);
 		undertowJaxrsAdminServer.start(Undertow.builder().setIoThreads(2)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 10)
-				.addHttpListener(8082, "0.0.0.0"));
+				.addHttpListener(adminPort, "0.0.0.0"));
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -80,6 +82,22 @@ public class SuperRestServer extends Thread {
 
 	public String getConfigDir() {
 		return configDir;
+	}
+	
+	public int getWebPort() {
+		return webPort;
+	}
+
+	public void setWebPort(int webPort) {
+		this.webPort = webPort;
+	}
+
+	public int getAdminPort() {
+		return adminPort;
+	}
+
+	public void setAdminPort(int adminPort) {
+		this.adminPort = adminPort;
 	}
 
 	public void setConfigDir(String configDir) {
