@@ -4,6 +4,7 @@ import io.undertow.Undertow;
 
 import org.xnio.Options;
 
+import com.superest.db.DataBaseFactory;
 import com.superest.resources.JaxrsApplication;
 
 public class SuperRestServer extends Thread {
@@ -21,6 +22,7 @@ public class SuperRestServer extends Thread {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
+				DataBaseFactory.clear();
 				undertowJaxrsServer.stop();
 				System.out.println("Inside Add Shutdown Hook");
 			}
