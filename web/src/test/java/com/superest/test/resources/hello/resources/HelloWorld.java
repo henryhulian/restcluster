@@ -13,6 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.infinispan.Cache;
+
+import com.superest.cache.CacheFatory;
 import com.superest.test.resources.hello.*;
 
 
@@ -75,7 +77,7 @@ public class HelloWorld {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String putCache(){
 		
-		Cache<String, String> cache = TestServer.emCacheManager.getCache();
+		Cache<String, String> cache = CacheFatory.getCache();
 		cache.put("cachekey", String.valueOf(System.currentTimeMillis()));
 		return (String)cache.get("cachekey");
 	}
@@ -86,7 +88,7 @@ public class HelloWorld {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCache(){
 		
-		Cache<String, String> cache = TestServer.emCacheManager.getCache();
+		Cache<String, String> cache = CacheFatory.getCache();
 		return (String)cache.get("cachekey");
 	}
 

@@ -4,6 +4,7 @@ import io.undertow.Undertow;
 
 import org.xnio.Options;
 
+import com.superest.cache.CacheFatory;
 import com.superest.db.DataBaseFactory;
 import com.superest.resources.JaxrsApplication;
 
@@ -19,6 +20,8 @@ public class SuperRestServer extends Thread {
 
 	@Override
 	public void run() {
+		
+		CacheFatory.init();
 		
 		DataBaseFactory.init(dbDir);
 		
