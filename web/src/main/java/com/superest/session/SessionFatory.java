@@ -1,5 +1,6 @@
 package com.superest.session;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.infinispan.Cache;
@@ -22,7 +23,7 @@ public class SessionFatory {
 	
 	public static void init( String sessionKey ){
 		SERVER_SIGN=sessionKey;
-		if( SERVER_SIGN==null){
+		if( StringUtils.isEmpty(SERVER_SIGN) ){
 			log.error("cannot find session key!");
 		}
 		sessionCache = CacheFatory.getCache(SESSION_CACHE_NAME);
@@ -37,15 +38,23 @@ public class SessionFatory {
 	}
 	
 	public static Session getSession( String token ){
+		
+		if( StringUtils.isEmpty(token) ){
+			log.warn("Token is empty");
+			return null;
+		}
+		
 		String sessionId = null;
 		try {
 			sessionId = AESUtil.decrypt(token,SERVER_SIGN);
 		} catch (Exception e) {
 			log.warn("Decrypt token error! token:"+token);
 		}
-		if( sessionId==null ){
+		
+		if( sessionId==null){
 			return null;
 		}
+		
 		return sessionCache.get(sessionId);
 	}
 
