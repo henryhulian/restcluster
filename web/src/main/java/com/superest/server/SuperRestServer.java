@@ -1,7 +1,13 @@
 package com.superest.server;
 
+import java.io.File;
+
 import io.undertow.Undertow;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.xnio.Options;
@@ -20,30 +26,44 @@ public class SuperRestServer extends Thread {
 
 	private Class<? extends JaxrsApplication> applicationClass = null;
 	private UndertowJaxrsServer undertowJaxrsServer = null;
+	
 	private String dbDir = null;
 	private String configDir = null;
-	private int webPort=8081;
-	private int adminPort=8082;
-	
-	private String sessionKey;
 	
 	private Authenticatior authticatior;
 	private Authorization authorization;
+	
+	private int webPort=8081;
+	private int adminPort=8082;
+	private String sessionKey;
 
 	public SuperRestServer() {
 
 	}
-
-	@Override
-	public void run() {
-
+	
+	public void init(){
+		
+		CompositeConfiguration config = new CompositeConfiguration();
+		config.addConfiguration(new SystemConfiguration());
+		try {
+			config.addConfiguration(new PropertiesConfiguration(configDir+File.separatorChar+"server.properties"));
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
+		}
+		
 		CacheFatory.init(configDir);
 		
-		SessionFatory.init( sessionKey );
+		SessionFatory.init( config.getString("sessionKey") );
 
 		DataBaseFactory.init(dbDir);
 
 		ServiceFatory.init(authticatior,authorization);
+		
+		
+	}
+
+	@Override
+	public void run() {
 		
 		undertowJaxrsServer = new UndertowJaxrsServer();
 		SuperRestServerContext.setUndertowJaxrsServer(undertowJaxrsServer);

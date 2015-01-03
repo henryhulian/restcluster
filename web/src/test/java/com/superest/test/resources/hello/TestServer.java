@@ -18,8 +18,6 @@ public class TestServer {
 
 		superRestServer.setDbDir(dir + File.separatorChar + "db");
 		superRestServer.setConfigDir(dir + File.separatorChar + "config");
-		superRestServer.setSessionKey("wXf;7-*!i)&d7TCM");
-		
 		superRestServer.setApplicationClass(TestApplication.class);
 		
 		superRestServer.setAuthticatior(new Authenticatior() {
@@ -45,7 +43,10 @@ public class TestServer {
 			}
 		});
 
+		superRestServer.init();
+		
 		superRestServer.start();
+		
 		Thread.currentThread().join();
 
 	}

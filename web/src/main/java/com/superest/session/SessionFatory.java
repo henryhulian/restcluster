@@ -12,7 +12,7 @@ public class SessionFatory {
 	
 	private static final Log log = LogFactoryImpl.getLog(SessionFatory.class);
 	
-	private static String SERVER_SIGN="wXf;7-*!i)&d7TCM";
+	private static String SERVER_SIGN=null;
 	private static final String SESSION_CACHE_NAME="session";
 	
 	private static Cache<String, Session> sessionCache;
@@ -22,6 +22,9 @@ public class SessionFatory {
 	
 	public static void init( String sessionKey ){
 		SERVER_SIGN=sessionKey;
+		if( SERVER_SIGN==null){
+			log.error("cannot find session key!");
+		}
 		sessionCache = CacheFatory.getCache(SESSION_CACHE_NAME);
 	}
 	
