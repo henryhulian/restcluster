@@ -1,6 +1,6 @@
 package com.superest.session;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.infinispan.Cache;
@@ -24,7 +24,8 @@ public class SessionFatory {
 	public static void init( String sessionKey ){
 		SERVER_SIGN=sessionKey;
 		if( StringUtils.isEmpty(SERVER_SIGN) ){
-			log.error("cannot find session key!");
+			log.error("Cannot find session key!");
+			throw new RuntimeException();
 		}
 		sessionCache = CacheFatory.getCache(SESSION_CACHE_NAME);
 	}

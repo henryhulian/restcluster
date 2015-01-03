@@ -35,7 +35,7 @@ public class CacheFatory {
 			log.trace("infinispan configration file:"+configDir+File.separatorChar+"infinispan.xml");
 			emCacheManager=new DefaultCacheManager(configDir+File.separatorChar+"infinispan.xml");
 		} catch (IOException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		return emCacheManager;
 	}

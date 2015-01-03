@@ -14,11 +14,11 @@
 		<version.undertow>1.1.1.Final</version.undertow>
 		<version.resteasy>3.0.10.Final</version.resteasy>
 		<version.infinispan>7.0.2.Final</version.infinispan>
-		<version.reflections>0.9.9-RC2</version.reflections>
+		<version.reflections>0.9.9</version.reflections>
 		<version.bdb>6.2.31</version.bdb>
 		<version.commons.configuration>1.10</version.commons.configuration>
 		<version.commons.lang>3.3.2</version.commons.lang>
-		<version.log4j>1.2.17</version.log4j>
+		<version.log4j>1.2.17</version.log4j> 
 	</properties>
 
 	<dependencyManagement>
@@ -73,7 +73,7 @@
 
 			<dependency>
 				<groupId>org.reflections</groupId>
-				<artifactId>reflections-maven</artifactId>
+				<artifactId>reflections</artifactId>
 				<version>${version.reflections}</version>
 			</dependency>
 
@@ -138,13 +138,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-multipart-provider</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.reflections</groupId>
-			<artifactId>reflections-maven</artifactId>
+			<artifactId>reflections</artifactId>
 		</dependency>
 
 		<dependency>
@@ -160,11 +155,6 @@
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
 		<dependency>

@@ -10,6 +10,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.reflections.Reflections;
 
+
 @ApplicationPath("rest")
 public class JaxrsApplication extends Application {
 

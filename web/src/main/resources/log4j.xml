@@ -65,35 +65,14 @@
 		This will produce A LOT of logging output. <category name="org.jboss.system"> 
 		<priority value="TRACE"/> </category> -->
 
-	<category name="org.jboss.logging">
-		<priority value="INFO" />
-	</category>
 	
-	<category name="org.apache.commons">
-		<priority value="INFO" />
-	</category>
-
-	<category name="org.infinispan">
-		<priority value="INFO" />
-	</category>
-
-	<category name="org.jboss.resteasy">
-		<priority value="INFO" />
-	</category>
-
-	<category name="org.xnio">
-		<priority value="INFO" />
-	</category>
-
-	<category name="org.jgroups">
-		<priority value="INFO" />
-	</category>
 
 	<!-- ======================= -->
 	<!-- Setup the Root category -->
 	<!-- ======================= -->
 
 	<root>
+	    <priority value ="INFO" /> 
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="FILE" />
 	</root>
