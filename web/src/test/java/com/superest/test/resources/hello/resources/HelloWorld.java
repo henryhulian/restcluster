@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -140,7 +141,24 @@ public class HelloWorld{
 		if( session == null ){
 			return false;
 		}
-		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionId(), request.getContextPath(), true, 0);
+		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionId(), request.getContextPath(), true,30000);
 		return true;
 	}
+	
+	
+	@Path("nologin")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean roletest( ){
+		return true;
+	}
+	
+	@Path("roleadmin")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("ADMIN")
+	public boolean roleadmin( ){
+		return true;
+	}
+	
 }
