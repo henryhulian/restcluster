@@ -45,6 +45,7 @@ public class SuperRestServer extends Thread {
 	public void init(){
 		
 		/*Get server configuration*/
+		log.debug("Read configuration....");
 		CompositeConfiguration config = new CompositeConfiguration();
 		config.addConfiguration(new SystemConfiguration());
 		try {
@@ -59,15 +60,19 @@ public class SuperRestServer extends Thread {
 		adminPort=config.getInt("adminPort",8082);
 		
 		/*INIT INFINISPAN cache*/
+		log.debug("INIT INFINISPAN cache....");
 		CacheFatory.init(configDir);
 		
 		/*INIT session factory*/
+		log.debug("INIT session factory....");
 		SessionFatory.init( config.getString("sessionKey") );
 
 		/*INIT database factory*/
+		log.debug("INIT database factory....");
 		DataBaseFactory.init(dbDir);
 
 		/*INIT service factory*/
+		log.debug("NIT service factory....");
 		ServiceFatory.init(authticatior,authorization);
 		
 	}
