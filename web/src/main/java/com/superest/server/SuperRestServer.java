@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.xnio.Options;
 
+import com.superest.admin.AdminApplication;
 import com.superest.authtication.Authenticatior;
 import com.superest.authtication.Authorization;
 import com.superest.cache.CacheFatory;

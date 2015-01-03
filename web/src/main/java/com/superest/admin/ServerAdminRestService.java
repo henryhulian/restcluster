@@ -1,9 +1,11 @@
-package com.superest.server;
+package com.superest.admin;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import com.superest.server.SuperRestServerContext;
 
 @Path("admin")
 public class ServerAdminRestService {

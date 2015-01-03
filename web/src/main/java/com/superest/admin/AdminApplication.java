@@ -1,4 +1,4 @@
-package com.superest.server;
+package com.superest.admin;
 
 import java.util.HashSet;
 import java.util.Set;
