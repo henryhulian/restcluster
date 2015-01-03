@@ -2,6 +2,8 @@ package com.superest.server;
 
 import io.undertow.Undertow;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.xnio.Options;
 
 import com.superest.authtication.Authenticatior;
@@ -13,6 +15,8 @@ import com.superest.service.ServiceFatory;
 import com.superest.session.SessionFatory;
 
 public class SuperRestServer extends Thread {
+	
+	private static final Log log = LogFactoryImpl.getLog(SuperRestServer.class);
 
 	private Class<? extends JaxrsApplication> applicationClass = null;
 	private UndertowJaxrsServer undertowJaxrsServer = null;
@@ -57,10 +61,19 @@ public class SuperRestServer extends Thread {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
+				log.info("stop cache!");
+				CacheFatory.clear();
+				
+				log.info("stop database!");
 				DataBaseFactory.clear();
+				
+				log.info("stop server!");
 				undertowJaxrsServer.stop();
+				
+				log.info("stop admin server!");
 				undertowJaxrsAdminServer.stop();
-				System.out.println("Inside Add Shutdown Hook");
+				
+				log.info("stop server success!");
 			}
 		});
 	}

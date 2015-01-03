@@ -1,5 +1,7 @@
 package com.superest.session;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.infinispan.Cache;
 
 import com.superest.cache.CacheFatory;
@@ -7,6 +9,8 @@ import com.superest.util.AESUtil;
 import com.superest.util.TokenUtil;
 
 public class SessionFatory {
+	
+	private static final Log log = LogFactoryImpl.getLog(SessionFatory.class);
 	
 	private static String SERVER_SIGN="wXf;7-*!i)&d7TCM";
 	private static final String SESSION_CACHE_NAME="session";
@@ -34,7 +38,7 @@ public class SessionFatory {
 		try {
 			sessionId = AESUtil.decrypt(token,SERVER_SIGN);
 		} catch (Exception e) {
-			System.out.println("Decrypt token error! token:"+token);
+			log.warn("Decrypt token error! token:"+token);
 		}
 		if( sessionId==null ){
 			return null;

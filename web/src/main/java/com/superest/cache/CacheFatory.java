@@ -52,8 +52,8 @@ public class CacheFatory {
 		return emCacheManager;
 	}
 
-	public static void setEmCacheManager(EmbeddedCacheManager emCacheManager) {
-		CacheFatory.emCacheManager = emCacheManager;
+	public static void clear() {
+		emCacheManager.stop();
 	}
 
 }
