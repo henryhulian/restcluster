@@ -16,6 +16,7 @@ import com.superest.admin.AdminApplication;
 import com.superest.authtication.Authenticatior;
 import com.superest.authtication.Authorization;
 import com.superest.cache.CacheFatory;
+import com.superest.common.ServerConfigCanstant;
 import com.superest.db.DataBaseFactory;
 import com.superest.resources.JaxrsApplication;
 import com.superest.service.ServiceFatory;
@@ -27,6 +28,7 @@ public class SuperRestServer extends Thread {
 
 	private Class<? extends JaxrsApplication> applicationClass = null;
 	private UndertowJaxrsServer undertowJaxrsServer = null;
+	private UndertowJaxrsServer adminUndertowJaxrsServer = null;
 	
 	private String dbDir = null;
 	private String configDir = null;
@@ -35,7 +37,14 @@ public class SuperRestServer extends Thread {
 	private Authorization authorization= null;
 	
 	private Integer webPort= null;
+	private String  webInterface=null;
+	
 	private Integer adminPort= null;
+	private String  adminInterface=null;
+	
+	private Integer serverIOThread=null;
+	private Integer serverIOMaxWorker=null;
+	
 	private String sessionKey= null;
 
 	public SuperRestServer() {
@@ -44,35 +53,44 @@ public class SuperRestServer extends Thread {
 	
 	public void init(){
 		
+		String configurationFilePath=configDir+File.separatorChar+"server.properties";
+		
 		/*Get server configuration*/
-		log.debug("Read configuration....");
+		log.info("Read configuration from "+configurationFilePath);
 		CompositeConfiguration config = new CompositeConfiguration();
 		config.addConfiguration(new SystemConfiguration());
 		try {
-			config.addConfiguration(new PropertiesConfiguration(configDir+File.separatorChar+"server.properties"));
+			config.addConfiguration(new PropertiesConfiguration(configurationFilePath));
 		} catch (ConfigurationException e) {
 			log.error(e);
-			log.error("Cannot find server configuration file:"+configDir+File.separatorChar+"server.properties");
+			log.error("Cannot find server configuration file:"+configurationFilePath);
 		}
 		
 		/*Set server port*/
-		webPort=config.getInt("webPort",8081);
-		adminPort=config.getInt("adminPort",8082);
+		webPort=config.getInt(ServerConfigCanstant.WEB_PORT,8081);
+		webInterface=config.getString(ServerConfigCanstant.WEB_INTERFACE,"0.0.0.0");
+		
+		adminPort=config.getInt(ServerConfigCanstant.ADMIN_PORT,8082);
+		adminInterface=config.getString(ServerConfigCanstant.ADMIN_INTERFACE,"127.0.0.1");
+		
+		/*Server thread configuration*/
+		serverIOThread=config.getInt(ServerConfigCanstant.SERVER_IO_THREAD,10);
+		serverIOMaxWorker=config.getInt(ServerConfigCanstant.SERVER_IO_MAX_WORKER,500);
 		
 		/*INIT INFINISPAN cache*/
-		log.debug("INIT INFINISPAN cache....");
+		log.info("INIT INFINISPAN cache....");
 		CacheFatory.init(configDir);
 		
 		/*INIT session factory*/
-		log.debug("INIT session factory....");
-		SessionFatory.init( config.getString("sessionKey") );
+		log.info("INIT session factory....");
+		SessionFatory.init( config.getString(ServerConfigCanstant.SESSION_KEY) );
 
 		/*INIT database factory*/
-		log.debug("INIT database factory....");
+		log.info("INIT database factory....");
 		DataBaseFactory.init(dbDir);
 
 		/*INIT service factory*/
-		log.debug("NIT service factory....");
+		log.info("NIT service factory....");
 		ServiceFatory.init(authticatior,authorization);
 		
 	}
@@ -83,15 +101,19 @@ public class SuperRestServer extends Thread {
 		undertowJaxrsServer = new UndertowJaxrsServer();
 		SuperRestServerContext.setUndertowJaxrsServer(undertowJaxrsServer);
 		undertowJaxrsServer.deploy(applicationClass);
-		undertowJaxrsServer.start(Undertow.builder().setIoThreads(20)
-				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 500)
-				.addHttpListener(webPort, "0.0.0.0"));
+		undertowJaxrsServer.start(Undertow.builder().setIoThreads(serverIOThread)
+				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, serverIOMaxWorker)
+				.addHttpListener(webPort, webInterface));
+		
 
-		final UndertowJaxrsServer undertowJaxrsAdminServer = new UndertowJaxrsServer();
-		undertowJaxrsAdminServer.deploy(AdminApplication.class);
-		undertowJaxrsAdminServer.start(Undertow.builder().setIoThreads(2)
+		adminUndertowJaxrsServer = new UndertowJaxrsServer();
+		adminUndertowJaxrsServer.deploy(AdminApplication.class);
+		adminUndertowJaxrsServer.start(Undertow.builder().setIoThreads(2)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 10)
-				.addHttpListener(adminPort, "0.0.0.0"));
+				.addHttpListener(adminPort, adminInterface));
+		
+		log.info("Superest Start server at "+webInterface+":"+webPort);
+		log.info("Superest Start admin interface at "+adminInterface+":"+adminPort);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -106,7 +128,7 @@ public class SuperRestServer extends Thread {
 				undertowJaxrsServer.stop();
 				
 				log.info("stop admin server!");
-				undertowJaxrsAdminServer.stop();
+				adminUndertowJaxrsServer.stop();
 				
 				log.info("stop server success!");
 			}

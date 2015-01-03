@@ -24,7 +24,8 @@ public class SessionFatory {
 	public static void init( String sessionKey ){
 		SERVER_SIGN=sessionKey;
 		if( StringUtils.isEmpty(SERVER_SIGN) ){
-			log.error("cannot find session key!");
+			log.error("Cannot find session key!");
+			throw new RuntimeException();
 		}
 		sessionCache = CacheFatory.getCache(SESSION_CACHE_NAME);
 	}
