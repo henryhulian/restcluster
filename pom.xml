@@ -18,6 +18,7 @@
 		<version.bdb>6.2.31</version.bdb>
 		<version.commons.configuration>1.10</version.commons.configuration>
 		<version.commons.lang>3.3.2</version.commons.lang>
+		<version.log4j>1.2.17</version.log4j>
 	</properties>
 
 	<dependencyManagement>
@@ -94,6 +95,13 @@
 				<version>${version.commons.lang}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${version.log4j}</version>
+			</dependency>
+
+
 
 		</dependencies>
 	</dependencyManagement>
@@ -157,6 +165,11 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
 		</dependency>
 	</dependencies>
 
