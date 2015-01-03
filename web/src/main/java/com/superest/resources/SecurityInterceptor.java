@@ -34,7 +34,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 	@Context
 	private HttpServletRequest request;
 	
-    private static final ServerResponse ACCESS_NO_TOKEN = new ServerResponse("No user login", 401, new Headers<Object>());
+    private static final ServerResponse ACCESS_NO_TOKEN = new ServerResponse("No token", 401, new Headers<Object>());
     private static final ServerResponse ACCESS_NO_USER_LOGIN = new ServerResponse("No user login", 401, new Headers<Object>());;
     private static final ServerResponse ACCESS_IP_FORBIDDEN = new ServerResponse("Ip error", 403, new Headers<Object>());;
     private static final ServerResponse ACCESS_ROLE_FORBIDDEN = new ServerResponse("No role", 403, new Headers<Object>());
