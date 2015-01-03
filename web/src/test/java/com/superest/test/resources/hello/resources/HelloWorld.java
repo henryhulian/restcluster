@@ -22,6 +22,7 @@ import com.superest.session.Session;
 import com.superest.session.SessionFatory;
 import com.superest.test.resources.hello.data.UserBean;
 import com.superest.util.CookieUtil;
+import com.superest.util.IpUtil;
 import com.superest.util.TokenUtil;
 
 
@@ -107,7 +108,7 @@ public class HelloWorld{
 	@Path("postsession")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Session getSession(){
+	public Session getSession() throws Exception{
 		Session session = SessionFatory.createSession();
 		session.put("key", "value");
 		return session;
@@ -141,7 +142,8 @@ public class HelloWorld{
 		if( session == null ){
 			return false;
 		}
-		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionId(), request.getContextPath(), true,30000);
+		session.setSessionIp(IpUtil.getIp(request));
+		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionSign(), request.getContextPath(), true,30000);
 		return true;
 	}
 	

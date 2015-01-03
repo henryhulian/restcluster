@@ -4,7 +4,8 @@ import io.undertow.Undertow;
 
 import org.xnio.Options;
 
-import com.superest.authtication.Authticatior;
+import com.superest.authtication.Authenticatior;
+import com.superest.authtication.Authorization;
 import com.superest.cache.CacheFatory;
 import com.superest.db.DataBaseFactory;
 import com.superest.resources.JaxrsApplication;
@@ -19,7 +20,11 @@ public class SuperRestServer extends Thread {
 	private String configDir = null;
 	private int webPort=8081;
 	private int adminPort=8082;
-	private Authticatior authticatior;
+	
+	private String sessionKey;
+	
+	private Authenticatior authticatior;
+	private Authorization authorization;
 
 	public SuperRestServer() {
 
@@ -30,11 +35,11 @@ public class SuperRestServer extends Thread {
 
 		CacheFatory.init(configDir);
 		
-		SessionFatory.init();
+		SessionFatory.init( sessionKey );
 
 		DataBaseFactory.init(dbDir);
 
-		ServiceFatory.init(authticatior);
+		ServiceFatory.init(authticatior,authorization);
 		
 		undertowJaxrsServer = new UndertowJaxrsServer();
 		SuperRestServerContext.setUndertowJaxrsServer(undertowJaxrsServer);
@@ -109,12 +114,28 @@ public class SuperRestServer extends Thread {
 		this.configDir = configDir;
 	}
 
-	public Authticatior getAuthticatior() {
+	public Authenticatior getAuthticatior() {
 		return authticatior;
 	}
 
-	public void setAuthticatior(Authticatior authticatior) {
+	public void setAuthticatior(Authenticatior authticatior) {
 		this.authticatior = authticatior;
+	}
+
+	public Authorization getAuthorization() {
+		return authorization;
+	}
+
+	public void setAuthorization(Authorization authorization) {
+		this.authorization = authorization;
+	}
+
+	public String getSessionKey() {
+		return sessionKey;
+	}
+
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 
 }

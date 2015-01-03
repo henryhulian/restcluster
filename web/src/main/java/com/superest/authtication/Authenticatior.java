@@ -1,5 +1,5 @@
 package com.superest.authtication;
 
-public interface Authticatior {
+public interface Authenticatior {
 	boolean authtication( String userName , String password);
 }

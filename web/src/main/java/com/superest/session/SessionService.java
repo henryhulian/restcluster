@@ -7,7 +7,8 @@ public class SessionService {
 		return session;
 	}
 	
-	public Session getSession( String sessionId ){
-		return SessionFatory.getSessionCache().get(sessionId);
+	public Session getSession( String token ){
+		return SessionFatory.getSession(token);
 	}
+	
 }

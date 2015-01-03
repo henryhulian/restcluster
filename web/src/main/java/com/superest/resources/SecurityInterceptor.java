@@ -72,8 +72,9 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
                  return;
             }
             
+            
             //check ip
-            if( !IpUtil.getIp(request).contains(session.getSessionIp())){
+            if( session.getSessionIp()!=null && !IpUtil.getIp(request).contains(session.getSessionIp())){
             	 requestContext.abortWith(ACCESS_IP_FORBIDDEN);
                  return;
             }
@@ -86,7 +87,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
                 Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
                  
                 //Is user valid?
-                if( ! isUserAllowed( session.get("USERNAME"), rolesSet))
+                if( !ServiceFatory.getAuthticationService().getAuthorization().isUserAllowed( session.get("USERNAME"), rolesSet) )
                 {
                     requestContext.abortWith(ACCESS_ROLE_FORBIDDEN);
                     return;
@@ -94,19 +95,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
             }
         }
     }
-    private boolean isUserAllowed(final String username, final Set<String> rolesSet)
-    {
-        boolean isAllowed = false;
-         
-        String userRole = "ADMIN";
-         
-        //Step 2. Verify user role
-        if(rolesSet.contains(userRole))
-        {
-            isAllowed = true;
-        }
-        return isAllowed;
-    }
+    
      
 }
 
