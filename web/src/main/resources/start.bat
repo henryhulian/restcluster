@@ -1,1 +1,0 @@
-java -Dcom.sun.management.jmxremote.port=5555 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xms1024m -Xmx4096m -jar web.jar
