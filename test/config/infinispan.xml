@@ -5,7 +5,7 @@
         xmlns="urn:infinispan:config:7.0">
 
   <jgroups>
-     <stack-file name="udp" path="D:\UserData\fb421\Documents\GitHub\restcluster\restcluster\web\config\jgroup.xml" />
+     <stack-file name="udp" path="D:\UserData\fb421\Documents\GitHub\restcluster\restcluster\test\config\jgroup.xml" />
   </jgroups>
 
   <cache-container default-cache="default">

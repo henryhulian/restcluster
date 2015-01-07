@@ -16,14 +16,14 @@ import javax.ws.rs.core.MediaType;
 
 import org.infinispan.Cache;
 
-import com.superest.cache.CacheFatory;
-import com.superest.service.ServiceFatory;
-import com.superest.session.Session;
-import com.superest.session.SessionFatory;
+import com.restcluster.superest.cache.CacheFatory;
+import com.restcluster.superest.service.ServiceFatory;
+import com.restcluster.superest.session.Session;
+import com.restcluster.superest.session.SessionFatory;
+import com.restcluster.superest.util.CookieUtil;
+import com.restcluster.superest.util.IpUtil;
+import com.restcluster.superest.util.TokenUtil;
 import com.superest.test.resources.hello.data.UserBean;
-import com.superest.util.CookieUtil;
-import com.superest.util.IpUtil;
-import com.superest.util.TokenUtil;
 
 
 
