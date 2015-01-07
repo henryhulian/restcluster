@@ -13,9 +13,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.infinispan.Cache;
-
 import com.restcluster.superest.cache.CacheFatory;
 import com.restcluster.superest.service.ServiceFatory;
 import com.restcluster.superest.session.Session;
@@ -25,144 +25,159 @@ import com.restcluster.superest.util.IpUtil;
 import com.restcluster.superest.util.TokenUtil;
 import com.superest.test.resources.hello.data.UserBean;
 import com.wordnik.swagger.annotations.Api;
-
-
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 @Path("helloWorld")
 @Api(value = "/hello", description = "Say Hello!")
-public class HelloWorld{
-	
-	
+public class HelloWorld {
+
 	@Context
 	private HttpServletRequest request;
-	
-	
+
 	@Context
 	private HttpServletResponse response;
-	
-	static Map<String, String>map = new HashMap<String, String>();
-	static{
-		map.put("hello1","111111111");
-		map.put("hello2","111111111");
-		map.put("hello3","111111111");
-		map.put("hello4","111111111");
-	}
-	
 
+	static Map<String, String> map = new HashMap<String, String>();
+	static {
+		map.put("hello1", "111111111");
+		map.put("hello2", "111111111");
+		map.put("hello3", "111111111");
+		map.put("hello4", "111111111");
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Say Hello World", notes = "Anything Else?")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 500, message = "Something wrong in Server") })
+	public Response sayHello() {
+		return Response.status(200).entity("sdfsd").build();
+	}
+
+	
 	@PermitAll
 	@Path("helloJson")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, String> getHelloJson(){
+	@ApiOperation(value="helloJson")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 500, message = "Something wrong in Server") })
+	public Map<String, String> getHelloJson() {
 		return map;
 	}
-	
+
 	@PermitAll
 	@Path("helloXml")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Map<String, String> getHelloXML(){
+	public Map<String, String> getHelloXML() {
 		return map;
 	}
-	
+
 	@PermitAll
 	@Path("userXml")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public UserBean getUserXml(){
+	public UserBean getUserXml() {
 		UserBean user = new UserBean();
-		user.username="sfsdf";
+		user.username = "sfsdf";
 		return user;
 	}
-	
+
 	@PermitAll
 	@Path("userJson")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserBean getUserJson(){
+	public UserBean getUserJson() {
 		UserBean user = new UserBean();
-		user.username="sfsdf";
+		user.username = "sfsdf";
 		return user;
 	}
-	
+
 	@PermitAll
 	@Path("putCache")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String putCache(){
-		
+	public String putCache() {
+
 		Cache<String, String> cache = CacheFatory.getCache();
 		cache.put("cachekey", String.valueOf(System.currentTimeMillis()));
-		return (String)cache.get("cachekey");
+		return (String) cache.get("cachekey");
 	}
-	
+
 	@PermitAll
 	@Path("getCache")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getCache(){
-		
+	public String getCache() {
+
 		Cache<String, String> cache = CacheFatory.getCache();
-		return (String)cache.get("cachekey");
+		return (String) cache.get("cachekey");
 	}
 
 	@PermitAll
 	@Path("postsession")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Session getSession() throws Exception{
+	public Session getSession() throws Exception {
 		Session session = SessionFatory.createSession();
 		session.put("key", "value");
 		return session;
 	}
-	
+
 	@PermitAll
 	@Path("putsession")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Session putSession(@QueryParam("sessionId") String sessionId){
-		Session session = ServiceFatory.getSessionService().getSession(sessionId);
+	public Session putSession(@QueryParam("sessionId") String sessionId) {
+		Session session = ServiceFatory.getSessionService().getSession(
+				sessionId);
 		session.put("key", String.valueOf(System.currentTimeMillis()));
 		ServiceFatory.getSessionService().updateSession(session);
 		return ServiceFatory.getSessionService().getSession(sessionId);
 	}
-	
+
 	@PermitAll
 	@Path("getsession")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Session getSession( @QueryParam("sessionId") String sessionId){
+	public Session getSession(@QueryParam("sessionId") String sessionId) {
 		return ServiceFatory.getSessionService().getSession(sessionId);
 	}
-	
+
 	@PermitAll
 	@Path("login")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean login( ){
-		Session session = ServiceFatory.getAuthticationService().authtication(null, null);
-		if( session == null ){
+	public boolean login() {
+		Session session = ServiceFatory.getAuthticationService().authtication(
+				null, null);
+		if (session == null) {
 			return false;
 		}
 		session.setSessionIp(IpUtil.getIp(request));
-		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionSign(), request.getContextPath(), true,30000);
+		CookieUtil
+				.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE,
+						session.getSessionSign(), request.getContextPath(),
+						true, 30000);
 		return true;
 	}
-	
-	
+
 	@Path("nologin")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean roletest( ){
+	public boolean roletest() {
 		return true;
 	}
-	
+
 	@Path("roleadmin")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("ADMIN")
-	public boolean roleadmin( ){
+	public boolean roleadmin() {
 		return true;
 	}
-	
+
 }
