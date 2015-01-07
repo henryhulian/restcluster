@@ -24,10 +24,12 @@ import com.restcluster.superest.util.CookieUtil;
 import com.restcluster.superest.util.IpUtil;
 import com.restcluster.superest.util.TokenUtil;
 import com.superest.test.resources.hello.data.UserBean;
+import com.wordnik.swagger.annotations.Api;
 
 
 
 @Path("helloWorld")
+@Api(value = "/hello", description = "Say Hello!")
 public class HelloWorld{
 	
 	

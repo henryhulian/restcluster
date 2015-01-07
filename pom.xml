@@ -19,7 +19,8 @@
 		<version.bdb>6.2.31</version.bdb>
 		<version.commons.configuration>1.10</version.commons.configuration>
 		<version.commons.lang>3.3.2</version.commons.lang>
-		<version.log4j>1.2.17</version.log4j> 
+		<version.log4j>1.2.17</version.log4j>
+		<version.swagger>1.3.1</version.swagger>
 	</properties>
 
 	<dependencyManagement>
@@ -102,7 +103,11 @@
 				<version>${version.log4j}</version>
 			</dependency>
 
-
+			<dependency>
+				<groupId>com.wordnik</groupId>
+				<artifactId>swagger-jaxrs_2.10</artifactId>
+				<version>${version.swagger}</version>
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -162,6 +167,12 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-jaxrs_2.10</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<repositories>

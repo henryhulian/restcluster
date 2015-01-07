@@ -17,6 +17,10 @@ public class JaxrsApplication extends Application {
 	@Override
 	public Set<Class<?>> getClasses() {
 		Set<Class<?>> classes = new HashSet<Class<?>>();
+		classes.add(com.wordnik.swagger.jaxrs.listing.ApiListingResource.class);
+		classes.add(com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider.class);
+		classes.add(com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON.class);
+		classes.add(com.wordnik.swagger.jaxrs.listing.ResourceListingProvider.class);
 		classes.addAll(addPackage("com.superest.resources"));
 		classes.addAll(addPackage(packageName()));
 		return classes;
