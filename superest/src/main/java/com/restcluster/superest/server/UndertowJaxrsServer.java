@@ -1,12 +1,16 @@
 package com.restcluster.superest.server;
 
 
+import java.io.File;
+
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
 import io.undertow.servlet.api.ServletInfo;
+
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.jboss.resteasy.test.TestPortProvider;
@@ -16,6 +20,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import static io.undertow.servlet.Servlets.servlet;
+import static io.undertow.Handlers.resource;
 
 
 /**
@@ -125,9 +130,9 @@ public class UndertowJaxrsServer
     * @param deployment
     * @return
     */
-   public UndertowJaxrsServer deploy(ResteasyDeployment deployment)
+   public UndertowJaxrsServer deploy(ResteasyDeployment deployment,String staticResourcePath)
    {
-      return deploy(deployment, "/");
+      return deploy(deployment, "/",staticResourcePath);
    }
 
    /**
@@ -137,14 +142,14 @@ public class UndertowJaxrsServer
     * @param contextPath
     * @return
     */
-   public UndertowJaxrsServer deploy(ResteasyDeployment deployment, String contextPath)
+   public UndertowJaxrsServer deploy(ResteasyDeployment deployment, String contextPath , String staticResourcePath)
    {
       if (contextPath == null) contextPath = "/";
       if (!contextPath.startsWith("/")) contextPath = "/" + contextPath;
       DeploymentInfo builder = undertowDeployment(deployment);
       builder.setContextPath(contextPath);
       builder.setDeploymentName("Resteasy" + contextPath);
-      return deploy(builder);
+      return deploy(builder,staticResourcePath);
    }
 
    /**
@@ -154,12 +159,12 @@ public class UndertowJaxrsServer
     * @param application
     * @return
     */
-   public UndertowJaxrsServer deploy(Class<? extends Application> application)
+   public UndertowJaxrsServer deploy(Class<? extends Application> application , String staticResourcePath)
    {
       ApplicationPath appPath = application.getAnnotation(ApplicationPath.class);
       String path = "/";
       if (appPath != null) path = appPath.value();
-      return deploy(application, path);
+      return deploy(application, path,staticResourcePath);
    }
 
    /**
@@ -169,7 +174,7 @@ public class UndertowJaxrsServer
     * @param contextPath
     * @return
     */
-   public UndertowJaxrsServer deploy(Class<? extends Application> application, String contextPath)
+   public UndertowJaxrsServer deploy(Class<? extends Application> application, String contextPath,String staticResourcePath)
    {
       if (contextPath == null) contextPath = "/";
       if (!contextPath.startsWith("/")) contextPath = "/" + contextPath;
@@ -179,7 +184,7 @@ public class UndertowJaxrsServer
       di.setClassLoader(application.getClassLoader());
       di.setContextPath(contextPath);
       di.setDeploymentName("Resteasy" + contextPath);
-      return deploy(di);
+      return deploy(di,staticResourcePath);
    }
 
    /**
@@ -189,12 +194,12 @@ public class UndertowJaxrsServer
     * @param application
     * @return
     */
-   public UndertowJaxrsServer deploy(Application application)
+   public UndertowJaxrsServer deploy(Application application , String staticResourcePath)
    {
       ApplicationPath appPath = application.getClass().getAnnotation(ApplicationPath.class);
       String path = "/";
       if (appPath != null) path = appPath.value();
-      return deploy(application, path);
+      return deploy(application, path , staticResourcePath);
    }
 
    /**
@@ -204,7 +209,7 @@ public class UndertowJaxrsServer
     * @param contextPath
     * @return
     */
-   public UndertowJaxrsServer deploy(Application application, String contextPath)
+   public UndertowJaxrsServer deploy(Application application, String contextPath,String staticResourcePath)
    {
       if (contextPath == null) contextPath = "/";
       if (!contextPath.startsWith("/")) contextPath = "/" + contextPath;
@@ -214,7 +219,7 @@ public class UndertowJaxrsServer
       di.setClassLoader(application.getClass().getClassLoader());
       di.setContextPath(contextPath);
       di.setDeploymentName("Resteasy" + contextPath);
-      return deploy(di);
+      return deploy(di,staticResourcePath);
    }
 
 
@@ -224,12 +229,13 @@ public class UndertowJaxrsServer
     * @param builder
     * @return
     */
-   public UndertowJaxrsServer deploy(DeploymentInfo builder)
+   public UndertowJaxrsServer deploy(DeploymentInfo builder, String staticResourcePath)
    {
       DeploymentManager manager = container.addDeployment(builder);
       manager.deploy();
       try
       {
+    	 root.addPrefixPath("/", resource(new FileResourceManager(new File(staticResourcePath), 1024)) );
          root.addPrefixPath(builder.getContextPath(), manager.start());
       }
       catch (ServletException e)

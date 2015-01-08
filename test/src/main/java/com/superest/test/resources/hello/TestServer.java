@@ -7,12 +7,6 @@ import com.restcluster.superest.authtication.Authenticatior;
 import com.restcluster.superest.authtication.Authorization;
 import com.restcluster.superest.server.SuperRestServer;
 import com.superest.test.resources.hello.resources.TestApplication;
-import com.wordnik.swagger.config.ConfigFactory;
-import com.wordnik.swagger.config.ScannerFactory;
-import com.wordnik.swagger.config.SwaggerConfig;
-import com.wordnik.swagger.jaxrs.config.DefaultJaxrsScanner;
-import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
-import com.wordnik.swagger.reader.ClassReaders;
 
 public class TestServer {
 
@@ -24,6 +18,7 @@ public class TestServer {
 
 		superRestServer.setDbDir(dir + File.separatorChar + "db");
 		superRestServer.setConfigDir(dir + File.separatorChar + "config");
+		superRestServer.setStaticResourcePath(dir + File.separatorChar + "web");
 		superRestServer.setApplicationClass(TestApplication.class);
 		
 		superRestServer.setAuthticatior(new Authenticatior() {
@@ -50,13 +45,6 @@ public class TestServer {
 		});
 
 		superRestServer.init();
-		
-		SwaggerConfig swaggerConfig = new SwaggerConfig();
-        ConfigFactory.setConfig(swaggerConfig);
-        swaggerConfig.setBasePath("http://localhost:8081//rest1");
-        swaggerConfig.setApiVersion("1.0.0");
-        ScannerFactory.setScanner(new DefaultJaxrsScanner());
-        ClassReaders.setReader(new DefaultJaxrsApiReader());
 		
 		superRestServer.start();
 		

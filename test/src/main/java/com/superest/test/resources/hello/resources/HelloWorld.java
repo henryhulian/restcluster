@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.infinispan.Cache;
 import com.restcluster.superest.cache.CacheFatory;
@@ -29,8 +28,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-@Path("helloWorld")
-@Api(value = "/hello", description = "Say Hello!")
+@Path("/helloWorld")
+@Api(value = "/helloWorld", description = "Say Hello!")
 public class HelloWorld {
 
 	@Context
@@ -47,21 +46,12 @@ public class HelloWorld {
 		map.put("hello4", "111111111");
 	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Say Hello World", notes = "Anything Else?")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 500, message = "Something wrong in Server") })
-	public Response sayHello() {
-		return Response.status(200).entity("sdfsd").build();
-	}
-
 	
 	@PermitAll
-	@Path("helloJson")
+	@Path("/helloJson")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="helloJson")
+	@ApiOperation(value="/helloJson",response=UserBean.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 500, message = "Something wrong in Server") })
 	public Map<String, String> getHelloJson() {
