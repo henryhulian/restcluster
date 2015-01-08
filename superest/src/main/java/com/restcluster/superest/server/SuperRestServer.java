@@ -2,6 +2,8 @@ package com.restcluster.superest.server;
 
 import java.io.File;
 
+import javax.ws.rs.ApplicationPath;
+
 import io.undertow.Undertow;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -21,6 +23,14 @@ import com.restcluster.superest.db.DataBaseFactory;
 import com.restcluster.superest.resources.JaxrsApplication;
 import com.restcluster.superest.service.ServiceFatory;
 import com.restcluster.superest.session.SessionFatory;
+import com.wordnik.swagger.config.ConfigFactory;
+import com.wordnik.swagger.config.ScannerFactory;
+import com.wordnik.swagger.config.SwaggerConfig;
+import com.wordnik.swagger.jaxrs.config.DefaultJaxrsScanner;
+import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
+import com.wordnik.swagger.reader.ClassReaders;
+
+
 
 public class SuperRestServer extends Thread {
 	
@@ -32,6 +42,7 @@ public class SuperRestServer extends Thread {
 	
 	private String dbDir = null;
 	private String configDir = null;
+	private String staticResourcePath = null;
 	
 	private Authenticatior authticatior= null;
 	private Authorization authorization= null;
@@ -54,6 +65,14 @@ public class SuperRestServer extends Thread {
 	public void init(){
 		
 		String configurationFilePath=configDir+File.separatorChar+"server.properties";
+		
+		/*swagger configuration*/
+		SwaggerConfig swaggerConfig = new SwaggerConfig();
+        ConfigFactory.setConfig(swaggerConfig);
+        swaggerConfig.setBasePath(applicationClass.getAnnotation(ApplicationPath.class).value());
+        swaggerConfig.setApiVersion("1.0.0");
+        ScannerFactory.setScanner(new DefaultJaxrsScanner());
+        ClassReaders.setReader(new DefaultJaxrsApiReader());
 		
 		/*Get server configuration*/
 		log.info("Read configuration from "+configurationFilePath);
@@ -100,20 +119,20 @@ public class SuperRestServer extends Thread {
 		
 		undertowJaxrsServer = new UndertowJaxrsServer();
 		SuperRestServerContext.setUndertowJaxrsServer(undertowJaxrsServer);
-		undertowJaxrsServer.deploy(applicationClass);
+		undertowJaxrsServer.deploy(applicationClass,staticResourcePath);
 		undertowJaxrsServer.start(Undertow.builder().setIoThreads(serverIOThread)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, serverIOMaxWorker)
 				.addHttpListener(webPort, webInterface));
 		
 
 		adminUndertowJaxrsServer = new UndertowJaxrsServer();
-		adminUndertowJaxrsServer.deploy(AdminApplication.class);
+		adminUndertowJaxrsServer.deploy(AdminApplication.class,staticResourcePath);
 		adminUndertowJaxrsServer.start(Undertow.builder().setIoThreads(2)
 				.setWorkerOption(Options.WORKER_TASK_MAX_THREADS, 10)
 				.addHttpListener(adminPort, adminInterface));
 		
-		log.info("Superest Start server at "+webInterface+":"+webPort);
-		log.info("Superest Start admin interface at "+adminInterface+":"+adminPort);
+		log.info("Superest Start server at "+webInterface+":"+webPort+" staticResourcePath:"+staticResourcePath);
+		log.info("Superest Start admin interface at "+adminInterface+":"+adminPort+" staticResourcePath:"+staticResourcePath);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -208,4 +227,12 @@ public class SuperRestServer extends Thread {
 		this.sessionKey = sessionKey;
 	}
 
+	public String getStaticResourcePath() {
+		return staticResourcePath;
+	}
+
+	public void setStaticResourcePath(String staticResourcePath) {
+		this.staticResourcePath = staticResourcePath;
+	}
+	
 }
