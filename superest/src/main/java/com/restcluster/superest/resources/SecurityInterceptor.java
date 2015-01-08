@@ -47,7 +47,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
         Method method = methodInvoker.getMethod();
        
         //Access allowed for all
-        if( ! method.isAnnotationPresent(PermitAll.class))
+        if( ! method.isAnnotationPresent(PermitAll.class) && !request.getRequestURI().contains("/api-docs"))
         {
             //Access denied for all
             if(method.isAnnotationPresent(DenyAll.class))

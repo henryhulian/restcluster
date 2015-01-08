@@ -3,7 +3,6 @@ package com.restcluster.superest.resources;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.Provider;
@@ -11,7 +10,6 @@ import javax.ws.rs.ext.Provider;
 import org.reflections.Reflections;
 
 
-@ApplicationPath("rest")
 public class JaxrsApplication extends Application {
 
 	@Override
@@ -21,7 +19,7 @@ public class JaxrsApplication extends Application {
 		classes.add(com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider.class);
 		classes.add(com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON.class);
 		classes.add(com.wordnik.swagger.jaxrs.listing.ResourceListingProvider.class);
-		classes.addAll(addPackage("com.superest.resources"));
+		classes.add(SecurityInterceptor.class);
 		classes.addAll(addPackage(packageName()));
 		return classes;
 	}
