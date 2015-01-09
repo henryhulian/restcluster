@@ -5,7 +5,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import com.restcluster.superest.server.SuperRestServerContext;
+import com.restcluster.superest.server.SuperRestServerContextSingleton;
 
 @Path("admin")
 public class ServerAdminRestService {
@@ -15,7 +15,7 @@ public class ServerAdminRestService {
 	@GET
 	@POST
 	public String  shutdownServer(){
-		SuperRestServerContext.getUndertowJaxrsServer().stop();
+		SuperRestServerContextSingleton.getInstance().getUndertowJaxrsServer().stop();
 		return "OK";
 	}
 	
@@ -24,7 +24,7 @@ public class ServerAdminRestService {
 	@GET
 	@POST
 	public String  startServer(){
-		SuperRestServerContext.getUndertowJaxrsServer().start();
+		SuperRestServerContextSingleton.getInstance().getUndertowJaxrsServer().start();
 		return "OK";
 	}
 }

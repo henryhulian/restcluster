@@ -17,7 +17,7 @@ import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ServerResponse;
 
-import com.restcluster.superest.service.ServiceFatory;
+import com.restcluster.superest.server.SuperRestServerContextSingleton;
 import com.restcluster.superest.session.Session;
 import com.restcluster.superest.util.CookieUtil;
 import com.restcluster.superest.util.IpUtil;
@@ -45,6 +45,9 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
     {
         ResourceMethodInvoker methodInvoker = (ResourceMethodInvoker) requestContext.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");
         Method method = methodInvoker.getMethod();
+        
+        SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
+        request.setAttribute(SuperRestServerContextSingleton.SERVER_CONTEXT,context);
        
         //Access allowed for all
         if( ! method.isAnnotationPresent(PermitAll.class) && !request.getRequestURI().contains("/api-docs"))
@@ -66,7 +69,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
             
             //find session information
             //if cann't find session return
-            Session session = ServiceFatory.getSessionService().getSession(token);
+            Session session = SuperRestServerContextSingleton.getInstance().getSessionFatory().getSession(token);
             if( session == null ){
             	 requestContext.abortWith(ACCESS_NO_USER_LOGIN);
                  return;
@@ -87,7 +90,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
                 Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
                  
                 //Is user valid?
-                if( !ServiceFatory.getAuthticationService().getAuthorization().isUserAllowed( session.get("USERNAME"), rolesSet) )
+                if( !context.getAuthenticationService().getAuthorization().isUserAllowed( session.get("USERNAME"), rolesSet) )
                 {
                     requestContext.abortWith(ACCESS_ROLE_FORBIDDEN);
                     return;

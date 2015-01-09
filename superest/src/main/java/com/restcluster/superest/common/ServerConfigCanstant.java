@@ -12,4 +12,8 @@ public class ServerConfigCanstant {
 	public static final String SERVER_IO_MAX_WORKER="SERVER_IO_MAX_WORKER";
 	
 	public static final String SESSION_KEY="SESSION_KEY";
+	
+	public static final String CACHE_CONFIG_FILE_PATH = "CACHE_CONFIG_FILE_PATH";
+	public static final String DBD_CONFIG_FILE_PATH = "DBD_CONFIG_FILE_PATH";
+	public static final String STATIC_RESOURCE_PATH = "STATIC_RESOURCE_PATH";
 }

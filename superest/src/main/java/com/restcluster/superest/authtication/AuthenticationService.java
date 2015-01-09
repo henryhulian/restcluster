@@ -5,6 +5,7 @@ import com.restcluster.superest.session.SessionFatory;
 
 public class AuthenticationService {
 
+	private SessionFatory sessionFatory;
 	private Authenticatior authticatior;
 	private Authorization authorization;
 	
@@ -25,7 +26,7 @@ public class AuthenticationService {
 		Session session = null;
 		
 		try {
-			session=SessionFatory.createSession();
+			session=sessionFatory.getSession();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -47,6 +48,14 @@ public class AuthenticationService {
 
 	public void setAuthorization(Authorization authorization) {
 		this.authorization = authorization;
+	}
+
+	public SessionFatory getSessionFatory() {
+		return sessionFatory;
+	}
+
+	public void setSessionFatory(SessionFatory sessionFatory) {
+		this.sessionFatory = sessionFatory;
 	}
 	
 	

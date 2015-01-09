@@ -16,21 +16,14 @@ public class SessionFatory {
 	private static String SERVER_SIGN=null;
 	private static final String SESSION_CACHE_NAME="session";
 	
-	private static Cache<String, Session> sessionCache;
+	private CacheFatory cacheFatory = null;
+	private Cache<String, Session> sessionCache = null;
 
-	private SessionFatory() {
+	public SessionFatory(CacheFatory cacheFatory) {
+		sessionCache=cacheFatory.getCache(SESSION_CACHE_NAME);
 	}
 	
-	public static void init( String sessionKey ){
-		SERVER_SIGN=sessionKey;
-		if( StringUtils.isEmpty(SERVER_SIGN) ){
-			log.error("Cannot find session key!");
-			throw new RuntimeException();
-		}
-		sessionCache = CacheFatory.getCache(SESSION_CACHE_NAME);
-	}
-	
-	public static Session createSession() throws Exception{
+	public  Session getSession() throws Exception{
 		Session session = new Session();
 		session.setSessionId(TokenUtil.createRandomToken());
 		session.setSessionSign(AESUtil.encrypt(session.getSessionId(),SERVER_SIGN));
@@ -38,7 +31,7 @@ public class SessionFatory {
 		return session;
 	}
 	
-	public static Session getSession( String token ){
+	public  Session getSession( String token ){
 		
 		if( StringUtils.isEmpty(token) ){
 			log.warn("Token is empty");
@@ -59,12 +52,12 @@ public class SessionFatory {
 		return sessionCache.get(sessionId);
 	}
 
-	public static Cache<String, Session> getSessionCache() {
-		return sessionCache;
+	public CacheFatory getCacheFatory() {
+		return cacheFatory;
 	}
 
-	public static void setSessionCache(Cache<String, Session> sessionCache) {
-		SessionFatory.sessionCache = sessionCache;
+	public void setCacheFatory(CacheFatory cacheFatory) {
+		this.cacheFatory = cacheFatory;
 	}
 	
 }

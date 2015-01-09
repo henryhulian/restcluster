@@ -1,6 +1,5 @@
 package com.superest.test.resources.hello;
 
-import java.io.File;
 import java.util.Set;
 
 import com.restcluster.superest.authtication.Authenticatior;
@@ -12,40 +11,24 @@ public class TestServer {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		final String dir = System.getProperty("user.dir");
+		String workPath = System.getProperty("user.dir");
 
-		SuperRestServer superRestServer = new SuperRestServer();
-
-		superRestServer.setDbDir(dir + File.separatorChar + "db");
-		superRestServer.setConfigDir(dir + File.separatorChar + "config");
-		superRestServer.setStaticResourcePath(dir + File.separatorChar + "web");
-		superRestServer.setApplicationClass(TestApplication.class);
-		
-		superRestServer.setAuthticatior(new Authenticatior() {
+		SuperRestServer superRestServer = new SuperRestServer(workPath,TestApplication.class,new Authenticatior() {
+			
 			@Override
 			public boolean authtication(String userName, String password) {
 				// TODO Auto-generated method stub
 				return true;
 			}
-		});
-
-		superRestServer.setAuthorization(new Authorization() {
+		},new Authorization() {
+			
 			@Override
 			public boolean isUserAllowed(String username, Set<String> rolesSet) {
-				boolean isAllowed = false;
-
-				String userRole = "ADMIN";
-
-				// Step 2. Verify user role
-				if (rolesSet.contains(userRole)) {
-					isAllowed = true;
-				}
-				return isAllowed;
+				// TODO Auto-generated method stub
+				return true;
 			}
 		});
 
-		superRestServer.init();
-		
 		superRestServer.start();
 		
 		Thread.currentThread().join();
