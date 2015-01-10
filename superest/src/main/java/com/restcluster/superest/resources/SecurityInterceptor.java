@@ -69,7 +69,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
             
             //find session information
             //if cann't find session return
-            Session session = SuperRestServerContextSingleton.getInstance().getSessionFatory().getSession(token);
+            Session session = context.getSessionFatory().getSession(token);
             if( session == null ){
             	 requestContext.abortWith(ACCESS_NO_USER_LOGIN);
                  return;

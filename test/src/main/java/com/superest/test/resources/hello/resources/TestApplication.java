@@ -4,7 +4,7 @@ import javax.ws.rs.ApplicationPath;
 
 import com.restcluster.superest.resources.JaxrsApplication;
 
-@ApplicationPath("/rest1")
+@ApplicationPath("/test")
 public class TestApplication extends JaxrsApplication{
 
 	@Override
