@@ -34,5 +34,18 @@ public class Neo4jDatabaseSingleton {
 	public void setDatabaseService(GraphDatabaseService databaseService) {
 		this.databaseService = databaseService;
 	}
+
+	public GraphDatabaseService getDatabaseService(String databasePath,
+			String databaseConfigPath) {
+		if( StringUtils.isEmpty(databasePath) ){
+			throw new RuntimeException("Neo4j database path is empty!");
+		}
+		
+		if( databaseService==null){
+			databaseService=new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(databasePath).loadPropertiesFromFile(databaseConfigPath).newGraphDatabase();
+		}
+		
+		return databaseService;
+	}
 	
 }

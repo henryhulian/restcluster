@@ -72,10 +72,7 @@ public class SuperRestServer extends Thread {
 	
 	private String sessionKey= null;
 	
-	private CacheFatory cacheFatory = null;
 	
-	private SessionFatory sessionFatory = null;
-
 	public SuperRestServer( String workPath , Class<? extends JaxrsApplication> applicationClass , Authenticatior authticatior , Authorization authorization ) {
 
 		this.setWorkPath(workPath);
@@ -119,24 +116,46 @@ public class SuperRestServer extends Thread {
 		
 		/*Initialize cache factory*/
 		log.info("Initialize cache factory......");
-		CacheFatory cacheFatory=new CacheFatory();
+		final CacheFatory cacheFatory=new CacheFatory();
 		cacheFatory.setConfigFilePath(config.getString(ServerConfigCanstant.CACHE_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"infinispan.xml"));
 		
 		/*Initialize session factory*/
 		log.info("Initialize session factory......");
-		sessionFatory = new SessionFatory(cacheFatory);
+		final SessionFatory sessionFatory = new SessionFatory(cacheFatory);
 
 		/*Initialize BDB factory*/
 		log.info("Initialize BDB factory......");
-		DataBaseFactory.init(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"db"));
+		final DataBaseFactory dataBaseFactory = new DataBaseFactory();
+		dataBaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
+		dataBaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
 
 		
 		AuthenticationService authenticationService = new AuthenticationService(authticatior, authorization);
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
 		context.setSessionFatory(sessionFatory);
+		context.setDataBaseFactory(dataBaseFactory);
 		context.setUndertowJaxrsServer(undertowJaxrsServer);
 		context.setAdminUndertowJaxrsServer(adminUndertowJaxrsServer);
 		context.setAuthenticationService(authenticationService);
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				log.info("stop cache!");
+				cacheFatory.clear();
+				
+				log.info("stop database!");
+				dataBaseFactory.clear();
+				
+				log.info("stop server!");
+				undertowJaxrsServer.stop();
+				
+				log.info("stop admin server!");
+				adminUndertowJaxrsServer.stop();
+				
+				log.info("stop server success!");
+			}
+		});
 	}
 	
 
@@ -159,25 +178,7 @@ public class SuperRestServer extends Thread {
 		
 		log.info("Superest Start server at "+webInterface+":"+webPort+" staticResourcePath:"+staticResourcePath);
 		log.info("Superest Start admin interface at "+adminInterface+":"+adminPort+" staticResourcePath:"+staticResourcePath);
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				log.info("stop cache!");
-				cacheFatory.clear();
-				
-				log.info("stop database!");
-				DataBaseFactory.clear();
-				
-				log.info("stop server!");
-				undertowJaxrsServer.stop();
-				
-				log.info("stop admin server!");
-				adminUndertowJaxrsServer.stop();
-				
-				log.info("stop server success!");
-			}
-		});
+		
 	}
 
 	public Class<? extends JaxrsApplication> getApplicationClass() {

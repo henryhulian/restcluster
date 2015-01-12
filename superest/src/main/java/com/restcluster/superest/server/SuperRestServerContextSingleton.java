@@ -1,6 +1,7 @@
 package com.restcluster.superest.server;
 
 import com.restcluster.superest.authtication.AuthenticationService;
+import com.restcluster.superest.db.DataBaseFactory;
 import com.restcluster.superest.session.SessionFatory;
 
 public class SuperRestServerContextSingleton {
@@ -10,6 +11,8 @@ public class SuperRestServerContextSingleton {
 	private static SuperRestServerContextSingleton instance = new SuperRestServerContextSingleton();
 	
 	private SessionFatory sessionFatory = null;
+	
+	private DataBaseFactory dataBaseFactory;
 	
 	private UndertowJaxrsServer undertowJaxrsServer = null;
 	private UndertowJaxrsServer adminUndertowJaxrsServer = null;
@@ -54,6 +57,14 @@ public class SuperRestServerContextSingleton {
 
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
+	}
+
+	public DataBaseFactory getDataBaseFactory() {
+		return dataBaseFactory;
+	}
+
+	public void setDataBaseFactory(DataBaseFactory dataBaseFactory) {
+		this.dataBaseFactory = dataBaseFactory;
 	}
 
 }

@@ -1,65 +1,35 @@
 package com.restcluster.superest.db;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class DataBaseFactory {
 	
-	/**
-	 * database environment
-	 * */
-	private static Environment environment=null;
+	private String databasePath;
+	private String databaseConfigPath;
 	
-	/**
-	 * database map , this is used to close all opened database when server shutdown
-	 * */
-	private final static Map<String,Database> databases = new HashMap<String, Database>();
-
-	private DataBaseFactory() {
+	public GraphDatabaseService getGraphDatabase(){
+		return Neo4jDatabaseSingleton.getInstance().getDatabaseService(databasePath,databaseConfigPath);
 	}
 	
-	public static  Environment init( String dbDir ){
-		EnvironmentConfig environmentConfig = new EnvironmentConfig();
-		environmentConfig.setAllowCreate(true);
-		environment = new Environment(new File(dbDir), environmentConfig);
-		return environment;
+	public void clear(){
+		Neo4jDatabaseSingleton.getInstance().getDatabaseService(databasePath,databaseConfigPath).shutdown();
 	}
 
-	public static Database openDatabase(String databaseName){
-		
-		Database database = databases.get(databaseName);
-		
-		if( database!= null){
-			return database;
-		}
-		
-		DatabaseConfig databaseConfig = new DatabaseConfig();
-		databaseConfig.setAllowCreate(true);
-		database = environment.openDatabase(environment.getThreadTransaction(), databaseName, databaseConfig);
-		databases.put(databaseName,database);
-		
-		return database;
+	public String getDatabasePath() {
+		return databasePath;
 	}
 
-	public static Environment getEnvironment() {
-		return environment;
+	public void setDatabasePath(String databasePath) {
+		this.databasePath = databasePath;
 	}
 
-	public static void clear() {
-		
-		for( String databaseName : databases.keySet() ){
-			databases.get(databaseName).close();
-		}
-		
-		if( environment!= null ){
-			environment.close();
-		}
-		
+	public String getDatabaseConfigPath() {
+		return databaseConfigPath;
 	}
+
+	public void setDatabaseConfigPath(String databaseConfigPath) {
+		this.databaseConfigPath = databaseConfigPath;
+	}
+	
 	
 }
