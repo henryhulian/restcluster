@@ -13,24 +13,28 @@ public class TestServer {
 
 		String workPath = System.getProperty("user.dir");
 
-		SuperRestServer superRestServer = new SuperRestServer(workPath,TestApplication.class,new Authenticatior() {
-			
-			@Override
-			public boolean authtication(String userName, String password) {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		},new Authorization() {
-			
-			@Override
-			public boolean isUserAllowed(String username, Set<String> rolesSet) {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		});
+		SuperRestServer superRestServer = new SuperRestServer(
+				workPath,
+				TestApplication.class,
+				new Authenticatior() {
+
+					@Override
+					public boolean authtication(String userName, String password) {
+						// TODO Auto-generated method stub
+						return true;
+					}
+				}, new Authorization() {
+
+					@Override
+					public boolean isUserAllowed(String username,
+							Set<String> rolesSet) {
+						// TODO Auto-generated method stub
+						return true;
+					}
+				});
 
 		superRestServer.start();
-		
+
 		Thread.currentThread().join();
 
 	}
