@@ -9,7 +9,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@ApiModel
+@ApiModel(description="User对象")
 public class UserBean{
 	
 	@XmlElement
