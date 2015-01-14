@@ -128,7 +128,6 @@ public class SuperRestServer extends Thread {
 		final DataBaseFactory dataBaseFactory = new DataBaseFactory();
 		dataBaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
 		dataBaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
-
 		
 		AuthenticationService authenticationService = new AuthenticationService(authticatior, authorization);
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();

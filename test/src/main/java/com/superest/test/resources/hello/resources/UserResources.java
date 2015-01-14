@@ -17,7 +17,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Api(value = "/userResources")
 public class UserResources {
 
-	
 	@POST
 	@Path("/user")
 	@ApiOperation(value="/user",httpMethod="post",consumes="application/json")
@@ -27,11 +26,11 @@ public class UserResources {
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
 		GraphDatabaseService databaseService = context.getDataBaseFactory().getGraphDatabase();
 		
-		Transaction transaction =  databaseService.beginTx();
-		Node node = databaseService.createNode();
-		node.setProperty("userName", userBean.getUsername());
-		transaction.success();
-		transaction.failure();
+		try(Transaction transaction =  databaseService.beginTx()){
+			Node node = databaseService.createNode();
+			node.setProperty("userName", userBean.getUsername());
+			transaction.success();
+		};
 		
 		return null;
 	}

@@ -116,6 +116,12 @@
 				<version>${version.neo4j}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.neo4j</groupId>
+				<artifactId>neo4j-shell</artifactId>
+				<version>${version.neo4j}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -183,6 +189,11 @@
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-ha</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-shell</artifactId>
 		</dependency>
 
 	</dependencies>
