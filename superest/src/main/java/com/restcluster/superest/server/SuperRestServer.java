@@ -123,11 +123,13 @@ public class SuperRestServer extends Thread {
 		log.info("Initialize session factory......");
 		final SessionFatory sessionFatory = new SessionFatory(cacheFatory);
 
-		/*Initialize BDB factory*/
+		/*Initialize DB factory*/
 		log.info("Initialize BDB factory......");
 		final DataBaseFactory dataBaseFactory = new DataBaseFactory();
 		dataBaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
 		dataBaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
+		dataBaseFactory.getGraphDatabase();
+		
 		
 		AuthenticationService authenticationService = new AuthenticationService(authticatior, authorization);
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
