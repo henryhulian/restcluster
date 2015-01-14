@@ -5,6 +5,7 @@ import java.util.Set;
 import com.restcluster.superest.authtication.Authenticatior;
 import com.restcluster.superest.authtication.Authorization;
 import com.restcluster.superest.server.SuperRestServer;
+import com.superest.test.resources.hello.data.Labels;
 import com.superest.test.resources.hello.resources.TestApplication;
 
 public class TestServer {
@@ -13,10 +14,8 @@ public class TestServer {
 
 		String workPath = System.getProperty("user.dir");
 
-		SuperRestServer superRestServer = new SuperRestServer(
-				workPath,
-				TestApplication.class,
-				new Authenticatior() {
+		SuperRestServer superRestServer = new SuperRestServer(workPath,
+				TestApplication.class, new Authenticatior() {
 
 					@Override
 					public boolean authtication(String userName, String password) {
@@ -34,6 +33,8 @@ public class TestServer {
 				});
 
 		superRestServer.start();
+		
+		Labels.init();
 
 		Thread.currentThread().join();
 
