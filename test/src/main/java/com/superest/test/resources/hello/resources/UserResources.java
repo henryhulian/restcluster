@@ -3,11 +3,13 @@ package com.superest.test.resources.hello.resources;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -46,12 +48,12 @@ public class UserResources extends DatabaseAware{
 	}
 	
 	@GET
-	@Path("/user")
+	@Path("/user/{pageIndex}/{pageSize}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
 	@ApiOperation(value="/user",consumes=MediaType.APPLICATION_JSON,produces=MediaType.APPLICATION_JSON,notes="查询会员列表")
-	public List<UserBean> findUser(){
+	public List<UserBean> findUser( @PathParam("pageIndex") Integer pageIndex, @PathParam("pageSize") Integer pageSize){
 		
 		GraphDatabaseService databaseService = super.getDatabase();
 		ExecutionEngine engine = new ExecutionEngine( databaseService );
@@ -60,7 +62,7 @@ public class UserResources extends DatabaseAware{
 		List<UserBean> rows= new ArrayList<>();
 		try(Transaction transaction =  databaseService.beginTx()){
 			
-			executionResult = engine.execute("match (n) return n.userName,n.password ");
+			executionResult = engine.execute("match (n) return n.userName,n.password skip "+pageSize*pageIndex+" limit "+pageSize);
 			for ( Map<String, Object> row : executionResult )
 			{
 				UserBean userBean = new UserBean();
