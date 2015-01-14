@@ -3,8 +3,6 @@ package com.superest.test.resources.hello.resources;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -40,6 +38,7 @@ public class UserResources extends DatabaseAware{
 		try(Transaction transaction =  databaseService.beginTx()){
 			Node node = databaseService.createNode();
 			node.setProperty("userName", userBean.getUsername());
+			node.setProperty("password", userBean.getPassword());
 			transaction.success();
 		};
 		
@@ -52,22 +51,22 @@ public class UserResources extends DatabaseAware{
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
 	@ApiOperation(value="/user",consumes=MediaType.APPLICATION_JSON,produces=MediaType.APPLICATION_JSON,notes="查询会员列表")
-	public List<String> findUser(){
+	public List<UserBean> findUser(){
 		
 		GraphDatabaseService databaseService = super.getDatabase();
 		ExecutionEngine engine = new ExecutionEngine( databaseService );
 		
 		ExecutionResult executionResult = null;
-		List<String> rows= new ArrayList<>();
+		List<UserBean> rows= new ArrayList<>();
 		try(Transaction transaction =  databaseService.beginTx()){
 			
-			executionResult = engine.execute("match (n) return n.userName ");
+			executionResult = engine.execute("match (n) return n.userName,n.password ");
 			for ( Map<String, Object> row : executionResult )
 			{
-			    for ( Entry<String, Object> column : row.entrySet() )
-			    {
-			    	rows.add((String)column.getValue());
-			    }
+				UserBean userBean = new UserBean();
+				userBean.setPassword((String)row.get("n.password"));
+				userBean.setUsername((String)row.get("n.userName"));
+				rows.add(userBean);
 			}
 			
 			transaction.success();
