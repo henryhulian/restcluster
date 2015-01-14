@@ -130,7 +130,7 @@ public class SuperRestServer extends Thread {
 		dataBaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
 		dataBaseFactory.getGraphDatabase();
 		
-		
+		/*Initialize context*/
 		AuthenticationService authenticationService = new AuthenticationService(authticatior, authorization);
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
 		context.setSessionFatory(sessionFatory);
