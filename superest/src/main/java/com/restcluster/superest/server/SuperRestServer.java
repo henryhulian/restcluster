@@ -124,7 +124,7 @@ public class SuperRestServer extends Thread {
 		final SessionFatory sessionFatory = new SessionFatory(cacheFatory);
 
 		/*Initialize DB factory*/
-		log.info("Initialize BDB factory......");
+		log.info("Initialize DB factory......");
 		final DataBaseFactory dataBaseFactory = new DataBaseFactory();
 		dataBaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
 		dataBaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));

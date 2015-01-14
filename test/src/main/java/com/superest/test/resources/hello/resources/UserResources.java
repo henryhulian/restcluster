@@ -1,8 +1,11 @@
 package com.superest.test.resources.hello.resources;
 
 import javax.annotation.security.PermitAll;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -19,8 +22,10 @@ public class UserResources {
 
 	@POST
 	@Path("/user")
-	@ApiOperation(value="/user",httpMethod="post",consumes="application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@PermitAll
+	@ApiOperation(value="/user",consumes=MediaType.APPLICATION_JSON,produces=MediaType.TEXT_PLAIN,notes="创建会员")
 	public String createUser( UserBean userBean){
 		
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
@@ -32,6 +37,6 @@ public class UserResources {
 			transaction.success();
 		};
 		
-		return null;
+		return "SUCCESS";
 	}
 }
