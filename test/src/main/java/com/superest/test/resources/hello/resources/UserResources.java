@@ -30,7 +30,8 @@ public class UserResources {
 		Transaction transaction =  databaseService.beginTx();
 		Node node = databaseService.createNode();
 		node.setProperty("userName", userBean.getUsername());
-		transaction.close();
+		transaction.success();
+		transaction.failure();
 		
 		return null;
 	}
