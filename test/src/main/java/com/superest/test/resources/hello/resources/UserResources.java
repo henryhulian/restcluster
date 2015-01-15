@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.restcluster.superest.resources.AbstractResources;
 import com.restcluster.superest.util.DateUtil;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
@@ -32,7 +33,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 @Path("/userResources")
 @Api(value = "/userResources",description="会员资源")
-public class UserResources extends DatabaseAware {
+public class UserResources extends AbstractResources {
 
 	@POST
 	@Path("/user")

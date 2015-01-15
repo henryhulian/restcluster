@@ -5,17 +5,19 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class DateAdapter extends XmlAdapter<String, Date> {
+import com.restcluster.superest.threadlocal.ThreadLocalHolder;
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+public class DateAdapter extends XmlAdapter<String, Date> {
 
     @Override
     public String marshal(Date v) throws Exception {
+    	SimpleDateFormat dateFormat = ThreadLocalHolder.getSimpleDateFormat();
         return dateFormat.format(v);
     }
 
     @Override
     public Date unmarshal(String v) throws Exception {
+    	SimpleDateFormat dateFormat = ThreadLocalHolder.getSimpleDateFormat();
         return dateFormat.parse(v);
     }
 

@@ -1,4 +1,4 @@
-package com.superest.test.resources.hello.resources;
+package com.restcluster.superest.resources;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -6,7 +6,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import com.restcluster.superest.db.Neo4jDatabaseFactory;
 import com.restcluster.superest.threadlocal.ThreadLocalHolder;
 
-abstract class DatabaseAware {
+public class AbstractResources {
 
 	public GraphDatabaseService getDatabase(){
 		return Neo4jDatabaseFactory.getInstance().getDatabaseService();
