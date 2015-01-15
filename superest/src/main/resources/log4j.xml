@@ -65,7 +65,9 @@
 		This will produce A LOT of logging output. <category name="org.jboss.system"> 
 		<priority value="TRACE"/> </category> -->
 
-	
+	<category name="com.restcluster"> 
+		<priority value="TRACE"/> 
+	</category>
 
 	<!-- ======================= -->
 	<!-- Setup the Root category -->

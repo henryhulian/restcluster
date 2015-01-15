@@ -5,15 +5,14 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
 
-import com.restcluster.superest.server.SuperRestServerContextSingleton;
+import com.restcluster.superest.db.Neo4jDatabaseFactory;
 
 public class Labels {
 
 	public static Label User = DynamicLabel.label("User");
 	
 	public static void init(){
-		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
-		GraphDatabaseService databaseService = context.getDataBaseFactory().getGraphDatabase();
+		GraphDatabaseService databaseService = Neo4jDatabaseFactory.getInstance().getDatabaseService();
 		try (Transaction transaction = databaseService.beginTx()) {
 			System.out.println("init schema");
 			try {

@@ -20,7 +20,7 @@ import com.restcluster.superest.authtication.Authenticatior;
 import com.restcluster.superest.authtication.Authorization;
 import com.restcluster.superest.cache.CacheFatory;
 import com.restcluster.superest.common.ServerConfigCanstant;
-import com.restcluster.superest.db.DataBaseFactory;
+import com.restcluster.superest.db.Neo4jDatabaseFactory;
 import com.restcluster.superest.resources.JaxrsApplication;
 import com.restcluster.superest.session.SessionFatory;
 import com.wordnik.swagger.config.ConfigFactory;
@@ -102,11 +102,11 @@ public class SuperRestServer extends Thread {
         ClassReaders.setReader(new DefaultJaxrsApiReader());
 		
 		/*Set server port*/
-		webPort=config.getInt(ServerConfigCanstant.WEB_PORT,8081);
-		webInterface=config.getString(ServerConfigCanstant.WEB_INTERFACE,"0.0.0.0");
+		webPort=config.getInt(ServerConfigCanstant.PUBLIC_PORT,8081)+config.getInt(ServerConfigCanstant.PORT_OFFSET);
+		webInterface=config.getString(ServerConfigCanstant.PUBLIC_INTERFACE,"0.0.0.0");
 		
 		adminPort=config.getInt(ServerConfigCanstant.ADMIN_PORT,8082);
-		adminInterface=config.getString(ServerConfigCanstant.ADMIN_INTERFACE,"127.0.0.1");
+		adminInterface=config.getString(ServerConfigCanstant.ADMIN_INTERFACE,"127.0.0.1")+config.getInt(ServerConfigCanstant.PORT_OFFSET);
 		
 		/*Server thread configuration*/
 		serverIOThread=config.getInt(ServerConfigCanstant.SERVER_IO_THREAD,10);
@@ -125,16 +125,16 @@ public class SuperRestServer extends Thread {
 
 		/*Initialize DB factory*/
 		log.info("Initialize DB factory......");
-		final DataBaseFactory dataBaseFactory = new DataBaseFactory();
-		dataBaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
-		dataBaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
-		dataBaseFactory.getGraphDatabase();
+		Neo4jDatabaseFactory neo4jDatabaseFactory = Neo4jDatabaseFactory.getInstance();
+		neo4jDatabaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
+		neo4jDatabaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
+		neo4jDatabaseFactory.setShellPort(1337+config.getInt(ServerConfigCanstant.PORT_OFFSET));
+		neo4jDatabaseFactory.init();
 		
 		/*Initialize context*/
 		AuthenticationService authenticationService = new AuthenticationService(authticatior, authorization);
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
 		context.setSessionFatory(sessionFatory);
-		context.setDataBaseFactory(dataBaseFactory);
 		context.setUndertowJaxrsServer(undertowJaxrsServer);
 		context.setAdminUndertowJaxrsServer(adminUndertowJaxrsServer);
 		context.setAuthenticationService(authenticationService);
@@ -146,7 +146,7 @@ public class SuperRestServer extends Thread {
 				cacheFatory.clear();
 				
 				log.info("stop database!");
-				dataBaseFactory.clear();
+				Neo4jDatabaseFactory.getInstance().clear();
 				
 				log.info("stop server!");
 				undertowJaxrsServer.stop();

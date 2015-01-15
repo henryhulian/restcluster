@@ -98,8 +98,8 @@ public class UserResources extends DatabaseAware {
 			@PathParam("pageSize") Integer pageSize) {
 
 		GraphDatabaseService databaseService = super.getDatabase();
-		ExecutionEngine engine = new ExecutionEngine(databaseService);
-
+		ExecutionEngine engine = super.getExecutionEngine();
+		
 		ExecutionResult executionResult = null;
 		List<UserBean> rows = new ArrayList<>();
 		try (Transaction transaction = databaseService.beginTx()) {
