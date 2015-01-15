@@ -2,24 +2,43 @@ package com.restcluster.superest.domain;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.Label;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Session implements Serializable{
+public class Session  implements Serializable{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3600879727090351823L;
 	
+	public static final Label Session = DynamicLabel.label("Session");
+	
+	public static final String ID="id";
+	
+	public static final String USER_NAME="username";
+
+	public static final String SESSION_ID="sessionId";
+	
+	public static final String SESSION_IP="sessionIp";
+	
+	public static final String SESSION_SIGN="sessionSign";
+	
+	public static final String CREATE_TIME="createTime";
+	
+	public static final String LASS_ACCESS_TIME="lassAccessTime";
+	
 	private Long id;
 	
+	@XmlElement(nillable=false)
 	private String userName;
 
 	@XmlElement(nillable=false)
@@ -94,29 +113,6 @@ public class Session implements Serializable{
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
-	public Node convertToNode( Node node ){
-		
-		node.setProperty("userName",this.getUserName());
-		node.setProperty("sessionId",this.getSessionId());
-		node.setProperty("sessionIp",this.getSessionIp());
-		node.setProperty("sessionSign",this.getSessionSign());
-		node.setProperty("createTime",this.getCreateTime().getTime());
-		node.setProperty("lassAccessTime",this.getLassAccessTime().getTime());
-		
-		return node;
-	}
 	
-	public Session convertToSession( Node node ){
 
-		this.setId((long)node.getId());
-		this.setUserName((String)node.getProperty("userName"));
-		this.setSessionId((String)node.getProperty("sessionId"));
-		this.setSessionIp((String)node.getProperty("sessionIp"));
-		this.setSessionSign((String)node.getProperty("sessionSign"));
-		this.setCreateTime(new Timestamp((long)node.getProperty("createTime")));
-		this.setLassAccessTime(new Timestamp((long)node.getProperty("lassAccessTime")));
-		
-		return this;
-	}
 }

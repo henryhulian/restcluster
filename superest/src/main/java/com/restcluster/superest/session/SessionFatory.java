@@ -1,5 +1,7 @@
 package com.restcluster.superest.session;
 
+import java.util.Iterator;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.LogFactoryImpl;
@@ -8,10 +10,8 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 
 import com.restcluster.superest.db.Neo4jDatabaseFactory;
-import com.restcluster.superest.domain.Labels;
 import com.restcluster.superest.domain.Session;
 import com.restcluster.superest.util.AESUtil;
-import com.restcluster.superest.util.TokenUtil;
 
 public class SessionFatory{
 	
@@ -28,29 +28,29 @@ public class SessionFatory{
 		return instance;
 	}
 	
-	public  Session getSession(){
+	public  Node getSession(){
 		
-		Session session = new Session();
-		session.setSessionId(TokenUtil.createRandomToken());
-		try {
-			session.setSessionSign(AESUtil.encrypt(session.getSessionId(),sessionKey));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
+		Node node = null;
 		GraphDatabaseService graphDatabaseService = Neo4jDatabaseFactory.getInstance().getDatabaseService();
 		try (Transaction transaction = graphDatabaseService.beginTx()) {
 			
-			Node node = graphDatabaseService.createNode(Labels.Session);
-			session.convertToNode(node);
+			node = graphDatabaseService.createNode(Session.Session);
+			node.setProperty(Session.SESSION_ID,node.getId());
+			node.setProperty(Session.CREATE_TIME, System.currentTimeMillis());
+			node.setProperty(Session.LASS_ACCESS_TIME, System.currentTimeMillis());
+			try {
+				node.setProperty(Session.SESSION_SIGN, AESUtil.encrypt(String.valueOf(node.getId()),sessionKey));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			
 			transaction.success();
 		};
 		
-		return session;
+		return node;
 	}
 	
-	public  Session getSession( String token ){
+	public  Node getSession( String token ){
 		
 		if( StringUtils.isEmpty(token) ){
 			log.warn("Token is empty");
@@ -69,33 +69,22 @@ public class SessionFatory{
 		}
 		
 		GraphDatabaseService graphDatabaseService = Neo4jDatabaseFactory.getInstance().getDatabaseService();
-		Session session = new Session();
+		Node node = null;
 		try (Transaction transaction = graphDatabaseService.beginTx()) {
 			
-			Node node = graphDatabaseService.findNodesByLabelAndProperty(Labels.Session, "sessionId", sessionId).iterator().next();
-			
-			session.convertToSession(node);
-			
+			 node = graphDatabaseService.getNodeById(Long.parseLong(sessionId));
+			 
+			 Iterator<String> iterator = node.getPropertyKeys().iterator();
+			 while( iterator.hasNext()){
+				 node.getProperty(iterator.next());
+			 }
+			 
 			transaction.success();
 		};
 		
-		return session;
+		return node;
 	}
 	
-	public  void updateSession( Session session ){
-		
-		GraphDatabaseService graphDatabaseService = Neo4jDatabaseFactory.getInstance().getDatabaseService();
-		try (Transaction transaction = graphDatabaseService.beginTx()) {
-			
-			Node node = graphDatabaseService.findNodesByLabelAndProperty(Labels.Session, "sessionId", session.getSessionId()).iterator().next();
-			
-			session.convertToNode(node);
-			
-			transaction.success();
-		};
-		
-	}
-
 
 	public String getSessionKey() {
 		return sessionKey;

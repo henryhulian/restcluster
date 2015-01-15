@@ -1,6 +1,7 @@
 package com.restcluster.superest.authtication;
 
-import com.restcluster.superest.domain.Session;
+import org.neo4j.graphdb.Node;
+
 import com.restcluster.superest.session.SessionFatory;
 
 public class AuthenticationService {
@@ -17,16 +18,16 @@ public class AuthenticationService {
 		this.authorization=authorization;
 	}
 	
-	public Session authtication( String userName , String password ){
+	public Node authtication( String userName , String password ){
 		
 		if( !authticatior.authtication(userName, password)){
 			return null;
 		}
 		
-		Session session = null;
+		Node session = null;
 		
 		try {
-			session=sessionFatory.getSession();
+			session=SessionFatory.getInstance().getSession();
 		} catch (Exception e) {
 			System.out.println(e);
 		}

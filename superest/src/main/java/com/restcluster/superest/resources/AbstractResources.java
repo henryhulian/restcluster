@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
 
 import com.restcluster.superest.db.Neo4jDatabaseFactory;
 import com.restcluster.superest.domain.Session;
@@ -24,23 +26,24 @@ public class AbstractResources {
 		return ThreadLocalHolder.getExecutionEngine();
 	}
 	
-	public Session getSession(){
+	public Node getSession(){
 		return SessionFatory.getInstance().getSession();
 	}
 	
-	public Session getSession( HttpServletRequest request , HttpServletResponse response){
-		Session session =  SessionFatory.getInstance().getSession();
-		session.setSessionIp(IpUtil.getIp(request));
-		updateSession(session);
-		CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, session.getSessionSign(), request.getContextPath(), true, -1);
+	public Node getSession( HttpServletRequest request , HttpServletResponse response){
+		Node session =  SessionFatory.getInstance().getSession();
+		
+		try( Transaction transaction =  getDatabase().beginTx()){
+			session.setProperty(Session.SESSION_IP, IpUtil.getIp(request));
+			CookieUtil.setCookie(response, TokenUtil.TOKEN_COOKIE_NMAE, (String)session.getProperty(Session.SESSION_SIGN), request.getContextPath(), true, -1);
+			transaction.success();
+		}
+		
 		return session;
 	}
 
-	public Session getSession( String token ){
+	public Node getSession( String token ){
 		return SessionFatory.getInstance().getSession(token);
 	}
 	
-	public void updateSession( Session session ){
-		SessionFatory.getInstance().updateSession(session);
-	}
 }

@@ -5,7 +5,6 @@ import java.util.Set;
 import com.restcluster.superest.authtication.Authenticatior;
 import com.restcluster.superest.authtication.Authorization;
 import com.restcluster.superest.server.SuperRestServer;
-import com.superest.test.resources.hello.data.Labels;
 import com.superest.test.resources.hello.resources.TestApplication;
 
 public class TestServer {
@@ -33,8 +32,6 @@ public class TestServer {
 				});
 
 		superRestServer.start();
-		
-		Labels.init();
 
 		Thread.currentThread().join();
 

@@ -16,9 +16,12 @@ import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ServerResponse;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
 
 import com.restcluster.superest.domain.Session;
 import com.restcluster.superest.server.SuperRestServerContextSingleton;
+import com.restcluster.superest.session.SessionFatory;
 import com.restcluster.superest.util.CookieUtil;
 import com.restcluster.superest.util.IpUtil;
 import com.restcluster.superest.util.TokenUtil;
@@ -28,7 +31,7 @@ import com.restcluster.superest.util.TokenUtil;
  * based on username and passowrd provided in request
  * */
 @Provider
-public class SecurityInterceptor implements javax.ws.rs.container.ContainerRequestFilter
+public class SecurityInterceptor extends AbstractResources implements javax.ws.rs.container.ContainerRequestFilter
 {
 	
 	@Context
@@ -67,34 +70,39 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
                  return;
             }
             
-            //find session information
-            //if cann't find session return
-            Session session = context.getSessionFatory().getSession(token);
-            if( session == null ){
-            	 requestContext.abortWith(ACCESS_NO_USER_LOGIN);
-                 return;
-            }
             
-            
-            //check ip
-            if( session.getSessionIp()!=null && !IpUtil.getIp(request).contains(session.getSessionIp())){
-            	 requestContext.abortWith(ACCESS_IP_FORBIDDEN);
-                 return;
-            }
-             
-           
-            //Verify user access
-            if(method.isAnnotationPresent(RolesAllowed.class))
-            {
-                RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-                Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
-                 
-                //Is user valid?
-                if( !context.getAuthenticationService().getAuthorization().isUserAllowed( session.getUserName(), rolesSet) )
-                {
-                    requestContext.abortWith(ACCESS_ROLE_FORBIDDEN);
-                    return;
+            try( Transaction transaction = super.getDatabase().beginTx()){
+            	
+            	//find session information
+                //if cann't find session return
+                Node session = SessionFatory.getInstance().getSession(token);
+                if( session == null ){
+                	 requestContext.abortWith(ACCESS_NO_USER_LOGIN);
+                     return;
                 }
+            	
+              //check ip
+	            if( session.getProperty(Session.SESSION_IP)!=null && !IpUtil.getIp(request).contains((String)session.getProperty(Session.SESSION_IP))){
+	            	 requestContext.abortWith(ACCESS_IP_FORBIDDEN);
+	                 return;
+	            }
+	             
+	           
+	            //Verify user access
+	            if(method.isAnnotationPresent(RolesAllowed.class))
+	            {
+	                RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+	                Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
+	                 
+	                //Is user valid?
+	                if( !context.getAuthenticationService().getAuthorization().isUserAllowed( (String)session.getProperty(Session.USER_NAME), rolesSet) )
+	                {
+	                    requestContext.abortWith(ACCESS_ROLE_FORBIDDEN);
+	                    return;
+	                }
+	            }
+	            
+	            
             }
         }
     }
