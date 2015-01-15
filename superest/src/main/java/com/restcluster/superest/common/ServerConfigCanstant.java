@@ -2,6 +2,11 @@ package com.restcluster.superest.common;
 
 public class ServerConfigCanstant {
 	
+	public static final String SERVER_MODEL_HA="HA";
+	public static final String SERVER_MODEL_SINGLE="SINGLE";
+	
+	public static final String SERVER_MODEL="SERVER_MODEL";
+	
 	/**
 	 * 端口偏移
 	 * 默认 0

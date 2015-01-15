@@ -2,7 +2,10 @@ package com.restcluster.superest.db;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.HighlyAvailableGraphDatabaseFactory;
 import org.neo4j.shell.ShellSettings;
+
+import com.restcluster.superest.common.ServerConfigCanstant;
 
 public class Neo4jDatabaseFactory {
 
@@ -12,6 +15,7 @@ public class Neo4jDatabaseFactory {
 	private String databasePath;
 	private String databaseConfigPath;
 	private Integer shellPort;
+	private String  model;
 	
 	
 	private Neo4jDatabaseFactory() {
@@ -23,7 +27,11 @@ public class Neo4jDatabaseFactory {
 	
 	public void init(){
 		if( databaseService==null ){
-			databaseService = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(databasePath).loadPropertiesFromFile(databaseConfigPath).setConfig(ShellSettings.remote_shell_port,String.valueOf(shellPort)).newGraphDatabase();
+			if( model.equals(ServerConfigCanstant.SERVER_MODEL_HA)){
+					databaseService = new HighlyAvailableGraphDatabaseFactory().newHighlyAvailableDatabaseBuilder(databasePath).loadPropertiesFromFile(databaseConfigPath).setConfig(ShellSettings.remote_shell_port,String.valueOf(shellPort)).newGraphDatabase();
+			}else{
+					databaseService = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(databasePath).loadPropertiesFromFile(databaseConfigPath).setConfig(ShellSettings.remote_shell_port,String.valueOf(shellPort)).newGraphDatabase();
+			}
 		}
 	}
 
@@ -54,6 +62,15 @@ public class Neo4jDatabaseFactory {
 
 	public void setShellPort(Integer shellPort) {
 		this.shellPort = shellPort;
+	}
+	
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 	public void clear() {

@@ -105,8 +105,8 @@ public class SuperRestServer extends Thread {
 		webPort=config.getInt(ServerConfigCanstant.PUBLIC_PORT,8081)+config.getInt(ServerConfigCanstant.PORT_OFFSET);
 		webInterface=config.getString(ServerConfigCanstant.PUBLIC_INTERFACE,"0.0.0.0");
 		
-		adminPort=config.getInt(ServerConfigCanstant.ADMIN_PORT,8082);
-		adminInterface=config.getString(ServerConfigCanstant.ADMIN_INTERFACE,"127.0.0.1")+config.getInt(ServerConfigCanstant.PORT_OFFSET);
+		adminPort=config.getInt(ServerConfigCanstant.ADMIN_PORT,8082)+config.getInt(ServerConfigCanstant.PORT_OFFSET);
+		adminInterface=config.getString(ServerConfigCanstant.ADMIN_INTERFACE,"127.0.0.1");
 		
 		/*Server thread configuration*/
 		serverIOThread=config.getInt(ServerConfigCanstant.SERVER_IO_THREAD,10);
@@ -129,6 +129,7 @@ public class SuperRestServer extends Thread {
 		neo4jDatabaseFactory.setDatabasePath(workPath+File.separatorChar+"db");
 		neo4jDatabaseFactory.setDatabaseConfigPath(config.getString(ServerConfigCanstant.DBD_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"neo4j.properties"));
 		neo4jDatabaseFactory.setShellPort(1337+config.getInt(ServerConfigCanstant.PORT_OFFSET));
+		neo4jDatabaseFactory.setModel(config.getString(ServerConfigCanstant.SERVER_MODEL,ServerConfigCanstant.SERVER_MODEL_SINGLE));
 		neo4jDatabaseFactory.init();
 		
 		/*Initialize context*/
