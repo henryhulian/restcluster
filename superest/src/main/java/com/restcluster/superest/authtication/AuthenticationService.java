@@ -1,6 +1,6 @@
 package com.restcluster.superest.authtication;
 
-import com.restcluster.superest.session.Session;
+import com.restcluster.superest.domain.Session;
 import com.restcluster.superest.session.SessionFatory;
 
 public class AuthenticationService {

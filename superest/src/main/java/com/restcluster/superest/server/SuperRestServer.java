@@ -18,7 +18,6 @@ import com.restcluster.superest.admin.AdminApplication;
 import com.restcluster.superest.authtication.AuthenticationService;
 import com.restcluster.superest.authtication.Authenticatior;
 import com.restcluster.superest.authtication.Authorization;
-import com.restcluster.superest.cache.CacheFatory;
 import com.restcluster.superest.common.ServerConfigCanstant;
 import com.restcluster.superest.db.Neo4jDatabaseFactory;
 import com.restcluster.superest.resources.JaxrsApplication;
@@ -114,14 +113,9 @@ public class SuperRestServer extends Thread {
 		
 		staticResourcePath=config.getString(ServerConfigCanstant.STATIC_RESOURCE_PATH,workPath+File.separatorChar+"web");
 		
-		/*Initialize cache factory*/
-		log.info("Initialize cache factory......");
-		final CacheFatory cacheFatory=new CacheFatory();
-		cacheFatory.setConfigFilePath(config.getString(ServerConfigCanstant.CACHE_CONFIG_FILE_PATH,workPath+File.separatorChar+"config"+File.separatorChar+"infinispan.xml"));
-		
 		/*Initialize session factory*/
 		log.info("Initialize session factory......");
-		final SessionFatory sessionFatory = new SessionFatory(cacheFatory);
+		SessionFatory.getInstance().setSessionKey(config.getString(ServerConfigCanstant.SESSION_KEY));
 
 		/*Initialize DB factory*/
 		log.info("Initialize DB factory......");
@@ -135,7 +129,6 @@ public class SuperRestServer extends Thread {
 		/*Initialize context*/
 		AuthenticationService authenticationService = new AuthenticationService(authticatior, authorization);
 		SuperRestServerContextSingleton context = SuperRestServerContextSingleton.getInstance();
-		context.setSessionFatory(sessionFatory);
 		context.setUndertowJaxrsServer(undertowJaxrsServer);
 		context.setAdminUndertowJaxrsServer(adminUndertowJaxrsServer);
 		context.setAuthenticationService(authenticationService);
@@ -143,8 +136,6 @@ public class SuperRestServer extends Thread {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				log.info("stop cache!");
-				cacheFatory.clear();
 				
 				log.info("stop database!");
 				Neo4jDatabaseFactory.getInstance().clear();

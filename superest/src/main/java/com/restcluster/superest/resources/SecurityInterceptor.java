@@ -17,8 +17,8 @@ import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ServerResponse;
 
+import com.restcluster.superest.domain.Session;
 import com.restcluster.superest.server.SuperRestServerContextSingleton;
-import com.restcluster.superest.session.Session;
 import com.restcluster.superest.util.CookieUtil;
 import com.restcluster.superest.util.IpUtil;
 import com.restcluster.superest.util.TokenUtil;
@@ -90,7 +90,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
                 Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
                  
                 //Is user valid?
-                if( !context.getAuthenticationService().getAuthorization().isUserAllowed( session.get("USERNAME"), rolesSet) )
+                if( !context.getAuthenticationService().getAuthorization().isUserAllowed( session.getUserName(), rolesSet) )
                 {
                     requestContext.abortWith(ACCESS_ROLE_FORBIDDEN);
                     return;
